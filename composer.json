@@ -1,0 +1,39 @@
+{
+	"name": "jefferson/error_monitor",
+	"description": "A customisable form plugin for WordPress Gutenberg Editor",
+	"type": "project",
+	"require": {
+		"phpmailer/phpmailer": "^6.8"
+	},
+	"require-dev": {
+		"squizlabs/php_codesniffer": "^3.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"wp-coding-standards/wpcs": "^3.0",
+		"phpunit/phpunit": "^9.5",
+		"yoast/phpunit-polyfills": "^1.0",
+		"mockery/mockery": "^1.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"WebGuyJeff\\Site_Monitor\\": "classes/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"WebGuyJeff\\Site_Monitor\\Tests\\": "tests/"
+		}
+	},
+	"scripts": {
+		"lint": "vendor/bin/phpcs -ps ./classes --standard=WordPress",
+		"lint-fix": "vendor/bin/phpcbf -ps ./classes --standard=WordPress",
+		"phpcompat": "./vendor/bin/phpcs -p . --standard=PHPCompatibilityWP --extensions=php --runtime-set testVersion 5.6-",
+		"test": "phpunit",
+		"test:unit": "phpunit --testsuite unit",
+		"test:integration": "phpunit --testsuite integration"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	}
+}

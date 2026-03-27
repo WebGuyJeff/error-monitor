@@ -1,0 +1,28 @@
+.errorMonitor__alertsContainer {
+	align-items: flex-start;
+	justify-content: flex-start;
+	background-color: #161616;
+	color: #00ff00;
+	transition: opacity 150ms ease-in-out;
+	box-shadow:
+		-1px -1px 0px 0px #606060,
+		1px 1px 0px 0px #fff,
+		0px 0px 0px 3px #c0c0c0;
+	margin-block: 1em;
+
+	.errorMonitor__alerts {
+		display: flex;
+		flex-flow: column nowrap;
+		align-items: flex-start;
+		justify-content: flex-start;
+		padding: 1em;
+
+		.errorMonitor__alert {
+			margin-block: 0;
+
+			&-danger {
+				color: #ff0000;
+			}
+		}
+	}
+}

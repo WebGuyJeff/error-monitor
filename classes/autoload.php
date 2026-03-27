@@ -1,0 +1,37 @@
+<?php
+/**
+ * Error Monitor - Class autoload by namesapce.
+ *
+ * - Sub-directories are searched recursively.
+ * - Classes are denoted by the suffix .class.php.
+ *
+ * @package error-monitor
+ * @author Jefferson Real <jeff@webguyjeff.com>
+ * @copyright Copyright (c) 2026, Jefferson Real
+ * @license GPL3+
+ * @link https://webguyjeff.com
+ *
+ * @param string $full_classname A fully-qualified class name e.g. 'Brand\\Project\\Class'.
+ * @param string $namespace The namespace e.g. 'Brand\\Project\\'.
+ * @param string $root Directory to recursively search.
+ */
+
+spl_autoload_register(
+	function ( $full_classname ) use ( $namespace, $root ) {
+
+		if ( strpos( $full_classname, $namespace ) !== 0 ) {
+			return;
+		}
+
+		$classname = substr( $full_classname, strlen( $namespace ) );
+		$filename  = strtolower( str_replace( '_', '-', $classname ) ) . '.class.php';
+
+		$tree = new RecursiveDirectoryIterator( $root );
+		foreach ( new RecursiveIteratorIterator( $tree ) as $file ) {
+			if ( $file->getFilename() === $filename ) {
+				include_once $file->getPathname();
+				break;
+			}
+		}
+	}
+);

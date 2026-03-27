@@ -1,0 +1,34 @@
+.errorMonitor__form-locked * {
+	cursor: default;
+	pointer-events: none !important;
+}
+
+.errorMonitor__testWrapper {
+	--errorMonitor_white: #fff;
+	--errorMonitor_black: #262626;
+	--errorMonitor_orange: #ffb908;
+	--errorMonitor_green: #63cfa7;
+	--errorMonitor_red: #fd6a42;
+	--errorMonitor_blue: #70d3e5;
+	--errorMonitor_lightGrey: #eee;
+	--errorMonitor_border: solid 1px;
+	--errorMonitor_padding: 0.5em 0.75em;
+	--errorMonitor_gutter: 0.5em;
+
+	.errorMonitor__submitLabel-notReady {
+		display: none;
+	}
+	.errorMonitor__submitLabel-ready {
+		display: inline;
+	}
+
+	#errorMonitor__smtpTest_button:disabled,
+	#errorMonitor__emailTest_button:disabled {
+		.errorMonitor__submitLabel-notReady {
+			display: inline;
+		}
+		.errorMonitor__submitLabel-ready {
+			display: none;
+		}
+	}
+}
