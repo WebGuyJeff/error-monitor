@@ -15,8 +15,11 @@ class Scan_Controller {
 		$result = array(
 			'success' => false,
 			'message' => '',
-			'count'   => 0,
-			'logs'    => '',
+			'total'   => 0,
+			'unique'  => 0,
+			'entries' => array(),
+			'first'   => null,
+			'last'    => null,
 		);
 
 		$scanner = new Log_Scanner();
@@ -25,31 +28,59 @@ class Scan_Controller {
 
 			$scanner->scan();
 
-			$result['count'] = $scanner->count;
-			$result['logs']  = $scanner->logs;
+			$entries = is_array( $scanner->entries ) ? $scanner->entries : array();
 
-			// Detect failure: no logs AND scanner couldn't run properly
-			// (basic heuristic: no log file or unreadable → scanner does nothing)
-			if ( $scanner->logs === '' && $scanner->count === 0 ) {
+			$repo  = new Log_Repository();
+			$total = 0;
 
-				// Could be valid (no new logs) OR failure
-				// We treat as success but no logs
+			foreach ( $entries as $entry ) {
+				$repo->insert_or_update( $entry );
+				++$total;
+			}
+
+			// Prune old db logs once per scan.
+			$repo->cleanup_old_logs();
+
+			/**
+			 * Calculate unique issues (dedupe by normalized message).
+			 */
+			$unique_keys = array();
+
+			foreach ( $entries as $entry ) {
+
+				if ( ! isset( $entry['raw'] ) ) {
+					continue;
+				}
+
+				$normalized = preg_replace( '/^\[[^\]]+\]\s*/', '', $entry['raw'] );
+				$key        = md5( $normalized );
+
+				$unique_keys[ $key ] = true;
+			}
+
+			$unique_count = count( $unique_keys );
+
+			$result['total']   = $total;
+			$result['unique']  = $unique_count;
+			$result['entries'] = $entries;
+			$result['first']   = $entries[0]['timestamp'] ?? null;
+			$result['last']    = ! empty( $entries ) ? end( $entries )['timestamp'] : null;
+
+			// No logs found.
+			if ( empty( $entries ) ) {
 				$result['success'] = true;
 				$result['message'] = __( 'Scan completed. No new logs found.', 'error-monitor' );
-
 				return $result;
 			}
 
-			// Logs found → success
+			// Success.
 			$result['success'] = true;
 			$result['message'] = sprintf(
-				/* translators: %d = number of logs */
 				__( 'Scan completed. %d new log(s) found.', 'error-monitor' ),
-				$scanner->count
+				$total
 			);
 
-			// Send success email
-			$this->send_success_email( $scanner );
+			$this->send_success_email( $entries, $result );
 
 		} catch ( \Throwable $e ) {
 
@@ -58,7 +89,6 @@ class Scan_Controller {
 			$result['success'] = false;
 			$result['message'] = __( 'Scan failed. Check logs for details.', 'error-monitor' );
 
-			// Send failure email
 			$this->send_failure_email( $e->getMessage() );
 		}
 
@@ -67,11 +97,8 @@ class Scan_Controller {
 
 	/**
 	 * Send success email with logs.
-	 *
-	 * @param Log_Scanner $scanner Scanner instance.
-	 * @return void
 	 */
-	private function send_success_email( Log_Scanner $scanner ): void {
+	private function send_success_email( array $entries, array $result ): void {
 
 		$settings = Settings::get();
 
@@ -84,12 +111,23 @@ class Scan_Controller {
 		$subject = sprintf(
 			'[%s] %d New PHP Error(s) Detected',
 			get_bloginfo( 'name' ),
-			$scanner->count
+			$result['total']
 		);
 
-		$plaintext = $scanner->logs;
+		$compose = new Compose_Email_Body(
+			'log',
+			array(
+				'count'   => $result['total'],
+				'total'   => $result['total'],
+				'unique'  => $result['unique'],
+				'entries' => $entries,
+				'first'   => $result['first'],
+				'last'    => $result['last'],
+			)
+		);
 
-		$html = nl2br( esc_html( $scanner->logs ) );
+		$html      = $compose->html();
+		$plaintext = $compose->plaintext();
 
 		$mailer->send(
 			$settings['host'],
@@ -110,9 +148,6 @@ class Scan_Controller {
 
 	/**
 	 * Send failure email.
-	 *
-	 * @param string $error Error message.
-	 * @return void
 	 */
 	private function send_failure_email( string $error ): void {
 

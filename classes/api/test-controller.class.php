@@ -57,45 +57,30 @@ class Test_Controller {
 				exit;
 
 			case 'email':
-				$test_data = array(
-					'form' => array(
-						'id'   => 0,
-						'name' => 'email test',
-					),
-					'fields' => array(
-						'name'  => array(
-							'value' => 'Test Name',
-						),
-						'email' => array(
-							'value' => 'test@example.com',
-						),
-					),
+				$subject = sprintf(
+					'[%s] SMTP Test Email',
+					get_bloginfo( 'name' )
 				);
-
-				$compose        = new Compose_Email_Body( $test_data );
-				$from_name      = get_bloginfo( 'name' );
-				$reply_name     = isset( $fields['name'] ) ? $fields['name']['value'] : $from_name;
-				$reply_email    = isset( $fields['email'] ) ? $fields['email']['value'] : $settings['from_email'];
-				$site_domain    = wp_parse_url( html_entity_decode( get_bloginfo( 'url' ) ), PHP_URL_HOST );
-				$subject        = '🥳 Success! ' . ucfirst( $test_data['form']['name'] ) . ' recieved from ' . $site_domain;
-				$html_body      = $compose->html();
-				$plaintext_body = $compose->plaintext();
-
-				$mailer         = new Mail_SMTP();
-				$result         = $mailer->send(
-					$host       = $settings['host'],
-					$port       = $settings['port'],
-					$username   = $settings['username'],
-					$password   = $settings['password'],
-					$to_email   = $settings['to_email'],
-					$from_email = $settings['from_email'],
+				$from_name   = get_bloginfo( 'name' );
+				$reply_name  = $from_name;
+				$reply_email = $settings['from_email'];
+				$site_domain = wp_parse_url( home_url(), PHP_URL_HOST );
+				$compose     = new Compose_Email_Body( 'test' );
+				$mailer      = new Mail_SMTP();
+				$result      = $mailer->send(
+					$settings['host'],
+					$settings['port'],
+					$settings['username'],
+					$settings['password'],
+					$settings['to_email'],
+					$settings['from_email'],
 					$from_name,
 					$reply_name,
 					$reply_email,
 					$subject,
-					$html_body,
-					$plaintext_body,
-					$site_domain,
+					$compose->html(),
+					$compose->plaintext(),
+					$site_domain
 				);
 
 				HTTP_Response::send_json( $result );

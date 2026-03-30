@@ -38,10 +38,6 @@ class Cron_Service {
 	 * Execute.
 	 */
 	public function execute(): void {
-
-// DEBUG.
-error_log( 'CRON execute()' );
-
 		$controller = new Scan_Controller();
 		$controller->run( false );
 	}

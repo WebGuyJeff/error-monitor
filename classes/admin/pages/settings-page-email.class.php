@@ -56,6 +56,7 @@ class Settings_Page_Email {
 	 */
 	public function output() {
 		?>
+		<div class="adminPage_container">
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( self::GROUP );
@@ -103,13 +104,14 @@ class Settings_Page_Email {
 
 					</div>
 
-					<div class='errorMonitor__alertsContainer' style="display:none;">
-						<div class='errorMonitor__alerts'></div>
+					<div id="errorMonitor__smtpLogs" class='errorMonitor__logOutput' style="display:none;">
+						<div id="errorMonitor__smtpLogOutput"></div>
 					</div>
 
 				</div>
 
 			</form>
+		</div>
 		<?php
 	}
 

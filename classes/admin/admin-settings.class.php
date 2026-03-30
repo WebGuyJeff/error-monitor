@@ -46,12 +46,19 @@ class Admin_Settings {
 
 
 	/**
+	 * Settings tab: Logs.
+	 */
+	private $logs_tab;
+
+
+	/**
 	 * Setup the class.
 	 */
 	public function __construct() {
 		$this->settings_parent = new Admin_Settings_Parent();
 		$this->monitor_tab     = new Settings_Page_Monitor();
 		$this->email_tab       = new Settings_Page_Email();
+		$this->logs_tab        = new Settings_Page_Logs();
 		$this->register();
 	}
 
@@ -124,16 +131,22 @@ class Admin_Settings {
 				$tab = isset( $_GET['tab'] ) ? $_GET['tab'] : null;
 				?>
 
-				<nav class="adminPage_nav">
-					<a
-						href="?page=<?php echo esc_attr( self::SETTINGSLUG ); ?>"
-						class="nav-tab<?php echo ( null === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
-					><?php echo esc_html( __( 'Monitor', 'error-monitor' ) ); ?></a>
-					<a
-						href="?page=<?php echo esc_attr( self::SETTINGSLUG ); ?>&tab=tab-2"
-						class="nav-tab<?php echo ( 'tab-2' === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
-					><?php echo esc_html( __( 'Email', 'error-monitor' ) ); ?></a>
-				</nav>
+				<div class="adminPage_container">
+					<nav class="adminPage_nav">
+						<a
+							href="?page=<?php echo esc_attr( self::SETTINGSLUG ); ?>"
+							class="nav-tab<?php echo ( null === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
+						><?php echo esc_html( __( 'Monitor', 'error-monitor' ) ); ?></a>
+						<a
+							href="?page=<?php echo esc_attr( self::SETTINGSLUG ); ?>&tab=tab-2"
+							class="nav-tab<?php echo ( 'tab-2' === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
+						><?php echo esc_html( __( 'Email', 'error-monitor' ) ); ?></a>
+						<a
+							href="?page=<?php echo esc_attr( self::SETTINGSLUG ); ?>&tab=tab-3"
+							class="nav-tab<?php echo ( 'tab-3' === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
+						><?php echo esc_html( __( 'Logs', 'error-monitor' ) ); ?></a>
+					</nav>
+				</div>
 
 				<div class="tab_content">
 					<?php
@@ -143,6 +156,9 @@ class Admin_Settings {
 							break;
 						case 'tab-2':
 							$this->email_tab->output();
+							break;
+						case 'tab-3':
+							$this->logs_tab->output();
 							break;
 					endswitch;
 					?>

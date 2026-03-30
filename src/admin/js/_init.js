@@ -10,8 +10,7 @@ const init = () => {
 			document.querySelector('#errorMonitor__smtpTest_button'),
 			document.querySelector('#errorMonitor__emailTest_button'),
 		]
-		if (testButtons.length === 0) return
-
+		if (!testButtons[0] || !testButtons[1]) return
 		testButtons.forEach((button) => {
 			button.addEventListener('click', testRequest)
 		})

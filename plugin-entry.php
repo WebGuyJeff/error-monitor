@@ -38,18 +38,9 @@ $init->setup();
 
 
 
+// TESTING - MUST BE DELETED BEFORE SHIPPING.
 
-
-
-// DEBUG.
-
-$fakelog = <<<LOG
-2:0:9:0: FFFE: Soft device bus error recovered by the IOA
-2:0:9:0: FFFE: Soft device bus error recovered by the IOA 
-2:0:9:0: FFFE: Soft device bus error recovered by the IOA 
-2:0:9:0: FFFE: Soft device bus error recovered by the IOA 
-2:0:9:0: FFFE: Soft device bus error recovered by the IOA 
-2:0:9:0: FFFE: Soft device bus error recovered by the IOA 
-2:0:9:0: FFFE: Soft device bus error recovered by the IOA 
-LOG;
-error_log( $fakelog );
+error_log('test log (from plugin entry)');
+error_log('test sdf sdfdds warning (from plugin entry)');
+error_log('sdf error (from plugin entry)');
+error_log('sdf s s jgbdghbdjkbksf  s  log (from plugin entry)');

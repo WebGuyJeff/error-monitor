@@ -1,0 +1,27 @@
+.errorMonitor__logViewer {
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+}
+
+.errorMonitor__logMeta {
+	font-size: 0.9em;
+	color: #555;
+}
+
+.errorMonitor__logOutput {
+	background: #111;
+	color: #e5e7eb;
+	padding: 1em;
+	border-radius: 0.5em;
+	max-height: 800px;
+	overflow: auto;
+	font-family: monospace;
+	font-size: 13px;
+	line-height: 1.5;
+	word-break: break-word;
+
+	pre {
+		white-space: pre-wrap;
+	}
+}

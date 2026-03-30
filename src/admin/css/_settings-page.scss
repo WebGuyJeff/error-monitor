@@ -6,7 +6,6 @@
 	flex-direction: column;
 	margin: 2em auto 0;
 	padding: 0 20px 0 2px;
-	width: 50rem;
 	max-width: 100%;
 	font-size: 15px !important;
 
@@ -32,6 +31,15 @@
 	.adminHeader,
 	.adminPage_body {
 		filter: drop-shadow(0px 0px 8px rgba(99, 99, 99, 0.2));
+	}
+
+	.adminPage_container {
+		width: 100%;
+		max-width: 43.75rem;
+
+		&.fullWidth {
+			max-width: 100%;
+		}
 	}
 
 	.adminTitle {

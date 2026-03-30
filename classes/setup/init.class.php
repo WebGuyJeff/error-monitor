@@ -33,6 +33,7 @@ class Init {
 	 * Setup the plugin.
 	 */
 	public function setup() {
+		$this->maybe_create_log_table();
 		if ( $this->is_admin ) {
 			new Admin_Settings();
 			new Scan_Hooks();
@@ -74,5 +75,38 @@ class Init {
 				'permission_callback' => '__return_true',
 			)
 		);
+	}
+
+
+	/**
+	 * Create or update the logs table.
+	 */
+	public function maybe_create_log_table() {
+
+		global $wpdb;
+
+		$table_name      = $wpdb->prefix . 'error_monitor_logs';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+		$sql = "CREATE TABLE $table_name (
+			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+			hash CHAR(32) NOT NULL,
+			message LONGTEXT NOT NULL,
+			normalized_message LONGTEXT NOT NULL,
+			severity VARCHAR(20) NOT NULL,
+			timestamps LONGTEXT NOT NULL,
+			count INT UNSIGNED NOT NULL DEFAULT 1,
+			first_seen INT UNSIGNED NOT NULL,
+			last_seen INT UNSIGNED NOT NULL,
+			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY (id),
+			KEY hash (hash),
+			KEY severity (severity),
+			KEY last_seen (last_seen)
+		) $charset_collate;";
+
+		dbDelta( $sql );
 	}
 }

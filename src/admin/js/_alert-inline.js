@@ -1,3 +1,6 @@
+const logWrapperSelector = '#errorMonitor__smtpLogs'
+const logoutputSelector = '#errorMonitor__smtpLogOutput'
+
 /**
  * Remove all child nodes from the output node.
  *
@@ -5,7 +8,7 @@
  *
  */
 function cleanOutput(form) {
-	const output = form.querySelector('.errorMonitor__alerts')
+	const output = form.querySelector(logoutputSelector)
 	output.replaceChildren()
 }
 
@@ -16,11 +19,11 @@ function cleanOutput(form) {
  * @param {array} alerts Alert objects to be displayed.
  */
 const addAlerts = (form, alerts) => {
-	const container = form.querySelector('.errorMonitor__alertsContainer')
-	const output = form.querySelector('.errorMonitor__alerts')
+	const container = form.querySelector(logWrapperSelector)
+	const output = form.querySelector(logoutputSelector)
 	if (!container || !output) return
 
-	container.style.display = 'flex'
+	container.style.display = 'block'
 	insertIntoDom(output, alerts)
 }
 
@@ -49,11 +52,11 @@ function insertIntoDom(output, alerts) {
 			warning: '-warning',
 		}
 	alerts.forEach((alert) => {
-		let p = document.createElement('p')
-		p.innerText = alert.text
+		let span = document.createElement('span')
+		span.innerText = alert.text
 		const classNames = [classBlock, classBlock + classModifier[alert.type]]
-		classNames.forEach((className) => p.classList.add(className))
-		output.appendChild(p)
+		classNames.forEach((className) => span.classList.add(className))
+		output.appendChild(span)
 	})
 }
 
