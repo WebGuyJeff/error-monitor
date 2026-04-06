@@ -6,7 +6,7 @@
  */
 function formLock(form, shouldLock) {
 	const inputs = form.querySelectorAll(':is( input, textarea )'),
-		button = form.querySelector('#errorMonitor__smtpTest_button')
+		button = form.querySelector('[data-em-test="smtp"]')
 
 	if (shouldLock) {
 		form.classList.add('errorMonitor__form-locked')

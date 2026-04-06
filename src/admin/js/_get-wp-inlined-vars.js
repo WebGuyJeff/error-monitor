@@ -8,10 +8,10 @@ const getWpInlinedVars = () => {
 	if (typeof errorMonitorInlinedScript === 'undefined') return false
 	const {
 		settingsOK, // Boolean value indicating email settings are configured.
-		restTestURL, // REST API store endpoint.
+		restActionURL, // REST API store endpoint.
 		restNonce, // WP nonce string.
 	} = errorMonitorInlinedScript
-	return { settingsOK, restTestURL, restNonce }
+	return { ...errorMonitorInlinedScript }
 }
 const errorMonitorInlinedVars = getWpInlinedVars()
 

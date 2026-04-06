@@ -3,7 +3,6 @@ namespace WebGuyJeff\Error_Monitor;
 
 class Cron_Service {
 
-
 	/**
 	 * Schedule event.
 	 */
@@ -38,6 +37,11 @@ class Cron_Service {
 	 * Execute.
 	 */
 	public function execute(): void {
+
+		if ( ! Settings::get_or_default( 'monitor_enabled', true ) ) {
+			return;
+		}
+
 		$controller = new Scan_Controller();
 		$controller->run( false );
 	}

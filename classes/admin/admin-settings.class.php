@@ -20,11 +20,10 @@ class Admin_Settings {
 	 */
 	private const PLUGINNAME = 'Error Monitor';
 
-
 	/**
-	 * Settings page slug to add with add_submenu_page().
+	 * Plugin settings.
 	 */
-	public const SETTINGSLUG = 'webguyjeff-error-monitor';
+	private $settings = array();
 
 
 	/**
@@ -52,6 +51,12 @@ class Admin_Settings {
 
 
 	/**
+	 * Settings tab: Log File.
+	 */
+	private $log_file_tab;
+
+
+	/**
 	 * Setup the class.
 	 */
 	public function __construct() {
@@ -59,7 +64,46 @@ class Admin_Settings {
 		$this->monitor_tab     = new Settings_Page_Monitor();
 		$this->email_tab       = new Settings_Page_Email();
 		$this->logs_tab        = new Settings_Page_Logs();
+		$this->log_file_tab    = new Settings_Page_Log_File();
 		$this->register();
+		$this->settings = Settings::get();
+	}
+
+
+	/**
+	 * Page URLs, slugs and titles.
+	 */
+	public static function url( $page, $part = false ): string {
+
+		$plugin_url = admin_url( 'admin.php?page=webguyjeff-error-monitor' );
+
+		$url = array(
+			'base' => array(
+				'url'   => $plugin_url,
+				'slug'  => 'webguyjeff-error-monitor',
+				'title' => 'Monitor',
+			),
+			'logs' => array(
+				'url'   => $plugin_url . '&tab=logs',
+				'slug'  => 'logs',
+				'title' => 'Logs',
+				'query' => '&tab=logs',
+			),
+			'email' => array(
+				'url'   => $plugin_url . '&tab=email',
+				'slug'  => 'email',
+				'title' => 'Email Account',
+				'query' => '&tab=email',
+			),
+			'log-file' => array(
+				'url'   => $plugin_url . '&tab=log-file',
+				'slug'  => 'log-file',
+				'title' => 'Log File',
+				'query' => '&tab=log-file',
+			),
+		);
+
+		return $url[ $page ][ $part ];
 	}
 
 
@@ -82,7 +126,7 @@ class Admin_Settings {
 			self::PLUGINNAME,                         // page_title.
 			self::PLUGINNAME,                         // menu_title.
 			'manage_options',                         // capability.
-			self::SETTINGSLUG,                        // menu_slug.
+			self::url( 'base', 'slug' ),             // menu_slug.
 			array( &$this, 'create_settings_page' ),  // function.
 			null,                                     // position.
 		);
@@ -94,7 +138,7 @@ class Admin_Settings {
 	 */
 	public function echo_plugin_settings_link() {
 		?>
-		<a href="/wp-admin/admin.php?page=<?php echo self::SETTINGSLUG; ?>">
+		<a href="/wp-admin/admin.php?page=<?php echo esc_html( self::url( 'base', 'slug' ) ); ?>">
 			<?php echo self::PLUGINNAME; ?>
 		</a>
 		<?php
@@ -116,6 +160,8 @@ class Admin_Settings {
 				self::PLUGINNAME,
 				$email_configured,
 				$cron_scheduled,
+				$this->settings['last_scan_time'],
+				$this->settings['last_log_timestamp'],
 			),
 		);
 		?>
@@ -134,17 +180,21 @@ class Admin_Settings {
 				<div class="adminPage_container">
 					<nav class="adminPage_nav">
 						<a
-							href="?page=<?php echo esc_attr( self::SETTINGSLUG ); ?>"
+							href="<?php echo esc_attr( self::url( 'base', 'url' ) ); ?>"
 							class="nav-tab<?php echo ( null === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
-						><?php echo esc_html( __( 'Monitor', 'error-monitor' ) ); ?></a>
+						><?php echo esc_html( self::url( 'base', 'title' ) ); ?></a>
 						<a
-							href="?page=<?php echo esc_attr( self::SETTINGSLUG ); ?>&tab=tab-2"
-							class="nav-tab<?php echo ( 'tab-2' === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
-						><?php echo esc_html( __( 'Email', 'error-monitor' ) ); ?></a>
+							href="<?php echo esc_attr( self::url( 'logs', 'url' ) ); ?>"
+							class="nav-tab<?php echo ( self::url( 'logs', 'slug' ) === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
+						><?php echo esc_html( self::url( 'logs', 'title' ) ); ?></a>
 						<a
-							href="?page=<?php echo esc_attr( self::SETTINGSLUG ); ?>&tab=tab-3"
-							class="nav-tab<?php echo ( 'tab-3' === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
-						><?php echo esc_html( __( 'Logs', 'error-monitor' ) ); ?></a>
+							href="<?php echo esc_attr( self::url( 'email', 'url' ) ); ?>"
+							class="nav-tab<?php echo ( self::url( 'email', 'slug' ) === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
+						><?php echo esc_html( self::url( 'email', 'title' ) ); ?></a>
+						<a
+							href="<?php echo esc_attr( self::url( 'log-file', 'url' ) ); ?>"
+							class="nav-tab<?php echo ( self::url( 'log-file', 'slug' ) === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
+						><?php echo esc_html( self::url( 'log-file', 'title' ) ); ?></a>
 					</nav>
 				</div>
 
@@ -154,11 +204,14 @@ class Admin_Settings {
 						default:
 							$this->monitor_tab->output();
 							break;
-						case 'tab-2':
+						case self::url( 'logs', 'slug' ):
+							$this->logs_tab->output();
+							break;
+						case self::url( 'email', 'slug' ):
 							$this->email_tab->output();
 							break;
-						case 'tab-3':
-							$this->logs_tab->output();
+						case self::url( 'log-file', 'slug' ):
+							$this->log_file_tab->output();
 							break;
 					endswitch;
 					?>

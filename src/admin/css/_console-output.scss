@@ -1,4 +1,4 @@
-#errorMonitor__smtpLogOutput {
+#errorMonitor__consoleOutput {
 	gap: 0.15em;
 	margin-block: 1em;
 	display: flex;
@@ -6,6 +6,10 @@
 
 	.errorMonitor__alert {
 		margin-block: 0;
+
+		&-success {
+			color: #1eff00;
+		}
 
 		&-danger {
 			color: #ff0000;

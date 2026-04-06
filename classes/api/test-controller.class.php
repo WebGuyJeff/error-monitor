@@ -21,22 +21,12 @@ class Test_Controller {
 	/**
 	 * Receive admin test submissions.
 	 */
-	public function error_monitor_test_smtp_rest_api_callback( WP_REST_Request $request ) {
-
-		// Verify header Content-Type of the request is what we want to see.
-		$type = $request->get_header( 'Content-Type' );
-		if ( ! str_contains( $type, 'application/json' ) ) {
-			HTTP_Response::send_json( array( 406, 'Test failed: Header Content-Type has an unexpected value.' ) );
-			error_log( 'Error_Monitor: error_monitor_test_smtp_rest_api_callback expects application/json but header Content-Type ' . $type . ' received.' );
-			exit;
-		}
+	public function perform_test( $request ) {
 
 		// Verify request body looks like a test request from the client side script.
-		$test_request = json_decode( $request->get_body(), true );
-		if ( ! is_array( $test_request ) || ! array_key_exists( 'test', $test_request ) ) {
-			HTTP_Response::send_json( array( 400, 'Test failed: The data recieved does not look like a test request.' ) );
-			error_log( 'Error_Monitor: error_monitor_test_smtp_rest_api_callback expects request body to be an array containing a "test" key.' );
-			exit;
+		if ( ! is_array( $request ) || ! array_key_exists( 'test', $request ) ) {
+			error_log( 'Error_Monitor: perform_test expects request body to be an array containing a "test" key.' );
+			return array( 400, 'Test failed: The data recieved does not look like a test request.' );
 		}
 
 		$settings = Settings::get();
@@ -44,7 +34,7 @@ class Test_Controller {
 			return array( 500, 'There was a problem retrieving your SMTP settings from the database.' );
 		}
 
-		switch ( $test_request['test'] ) {
+		switch ( $request['test'] ) {
 			case 'smtp':
 				$test_account = new Test_Account();
 				$result       = $test_account->smtp_connection(
@@ -53,8 +43,7 @@ class Test_Controller {
 					$settings['username'],
 					$settings['password'],
 				);
-				HTTP_Response::send_json( $result );
-				exit;
+				return $result;
 
 			case 'email':
 				$subject = sprintf(
@@ -82,14 +71,11 @@ class Test_Controller {
 					$compose->plaintext(),
 					$site_domain
 				);
-
-				HTTP_Response::send_json( $result );
-				exit;
+				return $result;
 
 			default:
-				HTTP_Response::send_json( array( 400, 'Test failed:. The requested test does not exist.' ) );
-				error_log( 'Error_Monitor: error_monitor_test_smtp_rest_api_callback recieved an unknown test type.' );
-				exit;
+				error_log( 'Error_Monitor: perform_test recieved an unknown test type.' );
+				return array( 400, 'Test failed:. The requested test does not exist.' );
 		}
 	}
 }

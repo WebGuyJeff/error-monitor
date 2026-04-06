@@ -2,7 +2,7 @@
 namespace WebGuyJeff\Error_Monitor;
 
 /**
- * Settings Tab: Logs Viewer.
+ * Settings Tab Logs.
  *
  * @package error-monitor
  */
@@ -32,22 +32,29 @@ class Settings_Page_Logs {
 					<?php echo esc_html( (string) $total ); ?>
 				</div>
 
-				<!-- VIEW TOGGLE -->
-				<div class="adminButtonRow">
-
-					<a
-						href="?page=<?php echo esc_attr( Admin_Settings::SETTINGSLUG ); ?>&tab=tab-3&view=grouped"
-						class="button <?php echo $view === 'grouped' ? 'button-primary' : 'button-secondary'; ?>">
-						Grouped View
-					</a>
-
-					<a
-						href="?page=<?php echo esc_attr( Admin_Settings::SETTINGSLUG ); ?>&tab=tab-3&view=raw"
-						class="button <?php echo $view === 'raw' ? 'button-primary' : 'button-secondary'; ?>">
-						Raw View
-					</a>
-
-				</div>
+				<?php
+				// Log view buttons.
+				Get_Input::action_buttons(
+					array(
+						array(
+							'action'               => 'fetch_logs',
+							'label'                => __( 'Grouped View', 'error-monitor' ),
+							'primary_or_secondary' => 'secondary',
+							'atttributes' => array(
+								'data-em-view' => 'grouped',
+							),
+						),
+						array(
+							'action'               => 'fetch_logs',
+							'label'                => __( 'Raw View', 'error-monitor' ),
+							'primary_or_secondary' => 'secondary',
+							'atttributes' => array(
+								'data-em-view' => 'raw',
+							),
+						),
+					),
+				);
+				?>
 
 				<?php if ( empty( $entries ) ) : ?>
 
@@ -55,60 +62,23 @@ class Settings_Page_Logs {
 						<p><?php esc_html_e( 'No logs found.', 'error-monitor' ); ?></p>
 					</div>
 
-				<?php else : ?>
+				<?php else :
 
-					<?php if ( 'grouped' === $view ) : ?>
+					$grouped = Log_Formatter::grouped( $entries );
+					?>
 
-						<?php $this->render_grouped( $entries ); ?>
+					<div class="errorMonitor__logOutput" data-em-log-output>
+						<?php echo Log_Renderer_Email_Safe::render( $entries ); ?>
+					</div>
 
-					<?php else : ?>
-
-						<?php $this->render_raw( $entries ); ?>
-
-					<?php endif; ?>
+					<p style="font-size:12px;color:#777;">
+						Only the last 100 occurrences per log are stored.
+					</p>
 
 				<?php endif; ?>
 
 			</div>
 		</div>
-
-		<?php
-	}
-
-	/**
-	 * Grouped view (same as email).
-	 */
-	private function render_grouped( array $entries ): void {
-
-		$grouped = Log_Formatter::grouped( $entries );
-
-		?>
-
-		<div class="errorMonitor__logOutput">
-			<?php echo Log_Renderer_Email_Safe::render( $entries ); ?>
-		</div>
-
-		<p style="font-size:12px;color:#777;">
-			Only the last 100 occurrences per log are stored.
-		</p>
-
-		<?php
-	}
-
-	/**
-	 * Raw chronological view.
-	 */
-	private function render_raw( array $entries ): void {
-
-		?>
-
-		<div class="errorMonitor__logOutput">
-			<pre><?php echo esc_html( implode( "\n", array_column( $entries, 'raw' ) ) ); ?></pre>
-		</div>
-
-		<p style="font-size:12px;color:#777;">
-			Showing chronological log entries (expanded from stored timestamps).
-		</p>
 
 		<?php
 	}

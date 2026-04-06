@@ -12,6 +12,19 @@ class Scan_Controller {
 	 */
 	public function run( bool $manual = false ): array {
 
+		// block cron scans when disabled, allow manual.
+		if ( ! $manual && ! Settings::get_or_default( 'monitor_enabled', true ) ) {
+			return array(
+				'success' => true,
+				'message' => __( 'Monitoring is disabled. Scheduled scan skipped.', 'error-monitor' ),
+				'total'   => 0,
+				'unique'  => 0,
+				'entries' => array(),
+				'first'   => null,
+				'last'    => null,
+			);
+		}
+
 		$result = array(
 			'success' => false,
 			'message' => '',
@@ -41,9 +54,7 @@ class Scan_Controller {
 			// Prune old db logs once per scan.
 			$repo->cleanup_old_logs();
 
-			/**
-			 * Calculate unique issues (dedupe by normalized message).
-			 */
+			// Calculate unique issues (dedupe by normalized message).
 			$unique_keys = array();
 
 			foreach ( $entries as $entry ) {

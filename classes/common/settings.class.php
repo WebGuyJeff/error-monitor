@@ -99,6 +99,9 @@ class Settings {
 			$updated         = true;
 		}
 
+error_log( 'Settings_Set: ' . $updated  . ' | ' . $key . ' = ' . print_r( $value, true ) );
+error_log( 'validate: ' . self::validate( array( $key => $value ) ) );
+
 		return $updated ? update_option( 'error_monitor_settings', $current ) : false;
 	}
 
@@ -169,12 +172,18 @@ class Settings {
 					break;
 
 				case 'scan_frequency_mins':
-					$valid = ( is_numeric( $value ) && intval( $value ) > 0 ) ? true : false;
-					break;
-
+				case 'log_retention_days':
 				case 'last_scan_time':
 				case 'last_log_timestamp':
 					$valid = ( is_numeric( $value ) && intval( $value ) > 0 ) ? true : false;
+					break;
+
+				case 'log_file_path':
+					$valid = is_string( $value );
+					break;
+
+				case 'monitor_enabled':
+					$valid = in_array( $value, array( 0, 1, '0', '1' ), true );
 					break;
 
 				default:

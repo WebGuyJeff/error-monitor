@@ -1,0 +1,33 @@
+#errorMonitor__toastContainer {
+	z-index: 99999;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.em-toast {
+	min-width: 250px;
+	padding: 12px 16px;
+	border-radius: 4px;
+	color: #fff;
+	font-size: 13px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+	opacity: 0;
+	transform: translateY(-10px);
+	animation: em-toast-in 0.2s ease forwards;
+}
+
+.em-toast-success {
+	background-color: #46b450;
+}
+
+.em-toast-danger {
+	background-color: #dc3232;
+}
+
+@keyframes em-toast-in {
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}

@@ -14,7 +14,7 @@ namespace WebGuyJeff\Error_Monitor;
  */
 
 
-class Sanitise {
+class Settings_Sanitise {
 
 	public function all_settings( $input ) {
 
@@ -22,40 +22,44 @@ class Sanitise {
 		$existing  = Settings::get();
 		$sanitised = array_merge( $existing, $input );
 
-		if ( isset( $input['username'] ) ) {
-			$sanitised['username'] = sanitize_text_field( $input['username'] );
+		if ( array_key_exists( 'username', $input ) ) {
+			$sanitised['username'] = sanitize_text_field( $input['username'], $input );
 		}
 
-		if ( isset( $input['password'] ) ) {
-			$sanitised['password'] = $this->sanitise_password( $input['password'] );
+		if ( array_key_exists( 'password', $input ) ) {
+			$sanitised['password'] = $this->sanitise_password( $input['password'], $input );
 		}
 
-		if ( isset( $input['host'] ) ) {
-			$sanitised['host'] = $this->validate_domain( $input['host'] );
+		if ( array_key_exists( 'host', $input ) ) {
+			$sanitised['host'] = $this->validate_domain( $input['host'], $input );
 		}
 
-		if ( isset( $input['port'] ) ) {
-			$sanitised['port'] = $this->sanitise_smtp_port( $input['port'] );
+		if ( array_key_exists( 'port', $input ) ) {
+			$sanitised['port'] = $this->sanitise_smtp_port( $input['port'], $input );
 		}
 
-		if ( isset( $input['to_email'] ) ) {
-			$sanitised['to_email'] = sanitize_email( $input['to_email'] );
+		if ( array_key_exists( 'to_email', $input ) ) {
+			$sanitised['to_email'] = sanitize_email( $input['to_email'], $input );
 		}
 
-		if ( isset( $input['from_email'] ) ) {
-			$sanitised['from_email'] = sanitize_email( $input['from_email'] );
+		if ( array_key_exists( 'from_email', $input ) ) {
+			$sanitised['from_email'] = sanitize_email( $input['from_email'], $input );
 		}
 
-		if ( isset( $input['scan_frequency_mins'] ) ) {
-			$sanitised['scan_frequency_mins'] = $this->sanitise_minutes( $input['scan_frequency_mins'] );
+		if ( array_key_exists( 'scan_frequency_mins', $input ) ) {
+			$sanitised['scan_frequency_mins'] = $this->sanitise_minutes( $input['scan_frequency_mins'], $input );
 		}
 
-		if ( isset( $input['last_scan_time'] ) ) {
-			$sanitised['last_scan_time'] = $this->sanitize_timestamp( $input['last_scan_time'] );
+		if ( array_key_exists( 'last_scan_time', $input ) ) {
+			$sanitised['last_scan_time'] = $this->sanitize_timestamp( $input['last_scan_time'], $input );
 		}
 
-		if ( isset( $input['last_log_timestamp'] ) ) {
-			$sanitised['last_log_timestamp'] = $this->sanitize_timestamp( $input['last_log_timestamp'] );
+		if ( array_key_exists( 'last_log_timestamp', $input ) ) {
+			$sanitised['last_log_timestamp'] = $this->sanitize_timestamp( $input['last_log_timestamp'], $input );
+		}
+
+		if ( array_key_exists( 'log_file_path', $input ) ) {
+			$sanitised['log_file_path'] = sanitize_text_field( $input['log_file_path'] );
 		}
 
 		return $sanitised;

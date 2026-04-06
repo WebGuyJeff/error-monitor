@@ -6,12 +6,14 @@ class Log_Scanner {
 
 	public array $entries = array();
 
+
 	/**
 	 * Run scan and populate properties.
 	 */
 	public function scan(): void {
 
-		$log_file = $this->get_log_file_path();
+		$discovery = new Log_File_Discovery();
+		$log_file  = $discovery->get_log_file_path();
 
 		if ( ! $log_file || ! file_exists( $log_file ) || ! is_readable( $log_file ) ) {
 			return;
@@ -33,6 +35,7 @@ class Log_Scanner {
 			Settings::set( 'last_log_timestamp', (int) $new_timestamp );
 		}
 	}
+
 
 	/**
 	 * Read file safely from end using SplFileObject.
@@ -103,6 +106,7 @@ class Log_Scanner {
 		return $new_timestamp;
 	}
 
+
 	/**
 	 * Extract timestamp from log line.
 	 */
@@ -116,28 +120,6 @@ class Log_Scanner {
 		return null;
 	}
 
-	/**
-	 * Get log file path.
-	 */
-	private function get_log_file_path(): ?string {
-
-		if ( defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG ) {
-
-			if ( is_string( WP_DEBUG_LOG ) ) {
-				return WP_DEBUG_LOG;
-			}
-
-			return WP_CONTENT_DIR . '/debug.log';
-		}
-
-		$fallback = ini_get( 'error_log' );
-
-		if ( $fallback && file_exists( $fallback ) ) {
-			return $fallback;
-		}
-
-		return null;
-	}
 
 	/**
 	 * Convert raw log entries into structured entries.

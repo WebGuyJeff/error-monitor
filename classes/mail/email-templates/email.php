@@ -132,6 +132,7 @@ $env_color = match ( $env ) {
 							<tr>
 								<td style="
 									padding-top:24px;
+									padding-bottom:24px;
 									text-align:center;
 									color:#9a9ea6;
 									font-size:12px;

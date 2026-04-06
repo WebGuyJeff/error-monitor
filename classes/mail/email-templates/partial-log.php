@@ -1,17 +1,17 @@
 <?php
 use WebGuyJeff\Error_Monitor\Log_Renderer_Email_Safe;
+use WebGuyJeff\Error_Monitor\Admin_Settings;
 
 [ $data ] = $variables;
 
-$count    = intval( $data['count'] ?? 0 );
-$total    = intval( $data['total'] ?? 0 );
-$unique   = intval( $data['unique'] ?? 0 );
-$entries  = is_array( $data['entries'] ?? null ) ? $data['entries'] : array();
-$first    = $data['first'] ?? null;
-$last     = $data['last'] ?? null;
-$duration = ( $first && $last ) ? ( $last - $first ) : 0;
-
-$admin_url = admin_url( 'admin.php?page=webguyjeff-error-monitor&tab=tab-3' );
+$count     = intval( $data['count'] ?? 0 );
+$total     = intval( $data['total'] ?? 0 );
+$unique    = intval( $data['unique'] ?? 0 );
+$entries   = is_array( $data['entries'] ?? null ) ? $data['entries'] : array();
+$first     = $data['first'] ?? null;
+$last      = $data['last'] ?? null;
+$duration  = ( $first && $last ) ? ( $last - $first ) : 0;
+$admin_url = Admin_Settings::url( 'logs', 'url' );
 ?>
 
 <table id="WRAPPER_TABLE" width="100%" cellpadding="0" cellspacing="0" role="presentation">
@@ -47,55 +47,46 @@ $admin_url = admin_url( 'admin.php?page=webguyjeff-error-monitor&tab=tab-3' );
 
 	<tr id="LOG_BLOCK">
 		<td style="padding-top:10px;">
-
 			<table id="responsive-log-block" width="100%" cellpadding="0" cellspacing="0" role="presentation"
 				style="
+					border-radius:8px;
 					background:#0f172a;
-					color:#e5e7eb;
 					padding:16px;
+					line-height:1.5;
+					color:#e5e7eb;
 					font-family: monospace;
 					font-size:13px;
-					line-height:1.5;
 				"
 			>
-
 				<tr>
 					<td>
-
 						<?php echo Log_Renderer_Email_Safe::render( $entries ); ?>
-
 					</td>
 				</tr>
-
 			</table>
-
 		</td>
 	</tr>
 
 	<tr id="CTA_BUTTON">
 		<td style="padding-top:18px;">
-
 			<table cellpadding="0" cellspacing="0" role="presentation">
 				<tr>
 					<td style="background:#2563eb; border-radius:6px;">
-
 						<a
 							href="<?php echo esc_url( $admin_url ); ?>"
 							style="
 								display:inline-block;
 								padding:10px 14px;
-								color:#ffffff;
-								font-size:13px;
 								text-decoration:none;
+								color:#ffffff;
 								font-family: Helvetica, sans-serif;
+								font-size:13px;
 						">
 							View full logs →
 						</a>
-
 					</td>
 				</tr>
 			</table>
-
 		</td>
 	</tr>
 

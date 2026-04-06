@@ -33,10 +33,11 @@ class Init {
 	 * Setup the plugin.
 	 */
 	public function setup() {
+		( new Settings_Registration() )->register();
 		$this->maybe_create_log_table();
 		if ( $this->is_admin ) {
 			new Admin_Settings();
-			new Scan_Hooks();
+			( new Log_File_Discovery() )->maybe_bootstrap_setting();
 		}
 		add_action( 'rest_api_init', array( $this, 'register_rest_api_routes' ), 10, 0 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts_and_styles' ), 10, 1 );
@@ -65,13 +66,12 @@ class Init {
 	 * @link https://developer.wordpress.org/reference/functions/register_rest_route/
 	 */
 	public function register_rest_api_routes() {
-		// SMTP account settings test endpoint.
 		register_rest_route(
 			'webguyjeff/error-monitor/v1',
-			'/test',
+			'/action',
 			array(
 				'methods'             => 'POST',
-				'callback'            => array( new Test_Controller(), 'error_monitor_test_smtp_rest_api_callback' ),
+				'callback'            => array( new Action_Controller(), 'handle' ),
 				'permission_callback' => '__return_true',
 			)
 		);

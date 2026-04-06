@@ -35,12 +35,3 @@ register_deactivation_hook( __FILE__, array( Cron_Hooks::class, 'deactivate' ) )
 // Setup the plugin.
 $init = new Init();
 $init->setup();
-
-
-
-// TESTING - MUST BE DELETED BEFORE SHIPPING.
-
-error_log('test log (from plugin entry)');
-error_log('test sdf sdfdds warning (from plugin entry)');
-error_log('sdf error (from plugin entry)');
-error_log('sdf s s jgbdghbdjkbksf  s  log (from plugin entry)');

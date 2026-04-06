@@ -64,11 +64,18 @@
 	}
 
 	.pluginStatus {
+		gap: 1.5em;
 		display: flex;
 		flex-flow: row wrap;
-		justify-content: flex-end;
 		align-items: center;
-		gap: 1.5em;
+		justify-content: flex-end;
+
+		& > div {
+			gap: inherit;
+			display: inherit;
+			flex-flow: inherit;
+			justify-content: inherit;
+		}
 	}
 
 	.adminHeaderDivider {
@@ -111,28 +118,17 @@
 		}
 	}
 
-	table:not(:last-of-type) {
-		margin-bottom: 4em;
-		border-bottom: var(--formElementBorder);
-	}
-
 	p,
 	input,
 	textarea,
-	.form-table,
-	.form-table td,
-	.form-table td p,
-	.form-table th,
 	button:is(.button, .button-primary, .button-secondary),
 	input[type='submit']:is(.button, .button-primary, .button-secondary) {
 		font-size: inherit;
 	}
 
-	input:is(.regular-text) {
-		width: 100%;
-	}
-
-	input[id^='error_monitor_settings'] {
+	input[id^='error_monitor_settings'],
+	textarea[id^='error_monitor_settings'],
+	select[id^='error_monitor_settings'] {
 		border: var(--formElementBorder);
 		border-radius: 0.35em;
 	}
