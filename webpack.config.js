@@ -1,5 +1,5 @@
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
-const wordpressConfig = require('@wordpress/scripts/config/webpack.config')
+const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' )
+const wordpressConfig = require( '@wordpress/scripts/config/webpack.config' )
 
 module.exports = {
 	...wordpressConfig,
@@ -9,7 +9,7 @@ module.exports = {
 	},
 	plugins: [
 		...wordpressConfig.plugins,
-		new BrowserSyncPlugin({
+		new BrowserSyncPlugin( {
 			proxy: 'localhost:6969', // Live WordPress site. Using IP breaks it.
 			ui: { port: 3001 }, // BrowserSync UI.
 			port: 3000, // Dev port on localhost.
@@ -24,6 +24,6 @@ module.exports = {
 				'templates/**',
 				'**/**.json',
 			],
-		}),
+		} ),
 	],
 }

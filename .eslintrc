@@ -1,11 +1,15 @@
 {
 	"env": {
-		"es6": true
+		"es6": true,
+		"browser": true,
+		"es2021": true,
+		"node": true
 	},
 	"plugins": [
 		"react"
 	],
 	"extends": [
+		"eslint:recommended",
 		"plugin:react/recommended"
 	],
 	"parserOptions": {
@@ -25,8 +29,14 @@
 	],
 	"root": true,
 	"rules": {
-		// suppress errors for missing 'import React' in files
 		"react/react-in-jsx-scope": "off",
+		"indent": [
+			"error",
+			"tab",
+			{
+				"SwitchCase": 1
+			}
+		],
 		"object-curly-spacing": [
 			"error",
 			"always"
@@ -41,7 +51,56 @@
 		],
 		"space-in-parens": [
 			"error",
-			"never"
+			"always"
+		],
+		"lines-between-class-members": [
+			"error",
+			"always"
+		],
+		"padding-line-between-statements": [
+			"error",
+			{
+				"blankLine": "always",
+				"prev": "function",
+				"next": "function"
+			},
+			{
+				"blankLine": "always",
+				"prev": "block",
+				"next": "function"
+			},
+			{
+				"blankLine": "always",
+				"prev": "function",
+				"next": "block"
+			},
+			{
+				"blankLine": "always",
+				"prev": "*",
+				"next": "return"
+			},
+			{
+				"blankLine": "always",
+				"prev": [
+					"const",
+					"let",
+					"var"
+				],
+				"next": "*"
+			},
+			{
+				"blankLine": "any",
+				"prev": [
+					"const",
+					"let",
+					"var"
+				],
+				"next": [
+					"const",
+					"let",
+					"var"
+				]
+			}
 		],
 		"no-multi-spaces": [
 			"error",
@@ -51,6 +110,7 @@
 				}
 			}
 		],
+		"no-trailing-spaces": "error",
 		"camelcase": "error",
 		"class-methods-use-this": "error",
 		"eqeqeq": [
@@ -85,6 +145,81 @@
 		"eol-last": [
 			"error",
 			"always"
-		]
+		],
+		"quotes": [
+			"error",
+			"single"
+		],
+		"brace-style": [
+			"error",
+			"1tbs"
+		],
+		"space-before-blocks": [
+			"error",
+			"always"
+		],
+		"no-mixed-spaces-and-tabs": [
+			"error",
+			"smart-tabs"
+		],
+		"no-tabs": "off",
+		"space-infix-ops": "error",
+		"keyword-spacing": [
+			"error",
+			{
+				"before": true,
+				"after": true
+			}
+		],
+		"comma-spacing": [
+			"error",
+			{
+				"before": false,
+				"after": true
+			}
+		],
+		"arrow-spacing": [
+			"error",
+			{
+				"before": true,
+				"after": true
+			}
+		],
+		"func-call-spacing": [
+			"error",
+			"never"
+		],
+		"space-before-function-paren": [
+			"error",
+			{
+				"anonymous": "always",
+				"named": "never",
+				"asyncArrow": "always"
+			}
+		],
+		"arrow-parens": [
+			"error",
+			"always"
+		],
+		"no-multiple-empty-lines": [
+			"error",
+			{
+				"max": 1,
+				"maxEOF": 1
+			}
+		],
+		"no-whitespace-before-property": "error",
+		"no-empty": [
+			"error",
+			{
+				"allowEmptyCatch": true
+			}
+		],
+		"no-unexpected-multiline": "error"
+	},
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
 	}
 }

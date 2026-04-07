@@ -5,7 +5,8 @@
  */
 
 const getWpInlinedVars = () => {
-	if (typeof errorMonitorInlinedScript === 'undefined') return false
+	if ( typeof errorMonitorInlinedScript === 'undefined' ) return false
+
 	return { ...errorMonitorInlinedScript }
 }
 const errorMonitorInlinedVars = getWpInlinedVars()
