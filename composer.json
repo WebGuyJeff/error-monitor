@@ -1,7 +1,6 @@
 {
-	"name": "jefferson/error_monitor",
-	"description": "A customisable form plugin for WordPress Gutenberg Editor",
-	"type": "project",
+	"name": "webguyjeff/error_monitor",
+	"description": "Monitor the error log and get notifications about new errors on your WordPress site.",
 	"require": {
 		"phpmailer/phpmailer": "^6.8"
 	},
@@ -15,17 +14,18 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"WebGuyJeff\\Site_Monitor\\": "classes/"
+			"WebGuyJeff\\Error_Monitor\\": "classes/"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"WebGuyJeff\\Site_Monitor\\Tests\\": "tests/"
+			"WebGuyJeff\\Error_Monitor\\Tests\\": "tests/"
 		}
 	},
 	"scripts": {
-		"lint": "vendor/bin/phpcs -ps ./classes --standard=WordPress",
-		"lint-fix": "vendor/bin/phpcbf -ps ./classes --standard=WordPress",
+		"lint": "vendor/bin/phpcs --standard=phpcs.xml.dist",
+		"lint-fix": "vendor/bin/phpcbf --standard=phpcs.xml.dist",
+		"lint:changed": "bash ./bin/lint-changed.sh",
 		"phpcompat": "./vendor/bin/phpcs -p . --standard=PHPCompatibilityWP --extensions=php --runtime-set testVersion 5.6-",
 		"test": "phpunit",
 		"test:unit": "phpunit --testsuite unit",

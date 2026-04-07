@@ -48,14 +48,17 @@ class Init {
 	 * Register admin scripts and styles.
 	 */
 	public function admin_scripts_and_styles( $hook_suffix ) {
-		wp_register_style( 'error_monitor_admin_css', ERRORMONITOR_URL . 'build/admin/css/error-monitor-admin.css', array(), filemtime( ERRORMONITOR_PATH . 'build/admin/css/error-monitor-admin.css' ), 'all' );
-		wp_register_script( 'error_monitor_admin_js', ERRORMONITOR_URL . 'build/admin/js/error-monitor-admin.js', array(), filemtime( ERRORMONITOR_PATH . 'build/admin/js/error-monitor-admin.js' ), false );
-		wp_add_inline_script( 'error_monitor_admin_js', Inline_Script::get_variables(), 'before' );
-		if ( ! wp_script_is( 'webguyjeff_icons', 'registered' ) ) {
-			wp_register_style( 'webguyjeff_icons', ERRORMONITOR_URL . 'dashicons/css/webguyjeff-icons.css', array(), filemtime( ERRORMONITOR_PATH . 'dashicons/css/webguyjeff-icons.css' ), 'all' );
-		}
-		if ( ! wp_script_is( 'webguyjeff_icons', 'enqueued' ) ) {
-			wp_enqueue_style( 'webguyjeff_icons' );
+
+		if ( str_contains( $hook_suffix, 'error-monitor' ) ) {
+			wp_register_style( 'error_monitor_admin_css', ERRORMONITOR_URL . 'build/admin/css/error-monitor-admin.css', array(), filemtime( ERRORMONITOR_PATH . 'build/admin/css/error-monitor-admin.css' ), 'all' );
+			wp_register_script( 'error_monitor_admin_js', ERRORMONITOR_URL . 'build/admin/js/error-monitor-admin.js', array(), filemtime( ERRORMONITOR_PATH . 'build/admin/js/error-monitor-admin.js' ), false );
+			wp_add_inline_script( 'error_monitor_admin_js', Inline_Script::get_variables(), 'before' );
+			if ( ! wp_script_is( 'webguyjeff_icons', 'registered' ) ) {
+				wp_register_style( 'webguyjeff_icons', ERRORMONITOR_URL . 'dashicons/css/webguyjeff-icons.css', array(), filemtime( ERRORMONITOR_PATH . 'dashicons/css/webguyjeff-icons.css' ), 'all' );
+			}
+			if ( ! wp_script_is( 'webguyjeff_icons', 'enqueued' ) ) {
+				wp_enqueue_style( 'webguyjeff_icons' );
+			}
 		}
 	}
 
@@ -66,13 +69,85 @@ class Init {
 	 * @link https://developer.wordpress.org/reference/functions/register_rest_route/
 	 */
 	public function register_rest_api_routes() {
+		$controller = new Action_Controller();
+
 		register_rest_route(
 			'webguyjeff/error-monitor/v1',
-			'/action',
+			'/bootstrap',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $controller, 'bootstrap' ),
+				'permission_callback' => array( $controller, 'can_manage_options' ),
+			)
+		);
+
+		register_rest_route(
+			'webguyjeff/error-monitor/v1',
+			'/settings',
 			array(
 				'methods'             => 'POST',
-				'callback'            => array( new Action_Controller(), 'handle' ),
-				'permission_callback' => '__return_true',
+				'callback'            => array( $controller, 'update_setting' ),
+				'permission_callback' => array( $controller, 'can_manage_options' ),
+			)
+		);
+
+		register_rest_route(
+			'webguyjeff/error-monitor/v1',
+			'/monitor/scan',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $controller, 'manual_scan' ),
+				'permission_callback' => array( $controller, 'can_manage_options' ),
+			)
+		);
+
+		register_rest_route(
+			'webguyjeff/error-monitor/v1',
+			'/logs',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $controller, 'fetch_logs' ),
+				'permission_callback' => array( $controller, 'can_manage_options' ),
+			)
+		);
+
+		register_rest_route(
+			'webguyjeff/error-monitor/v1',
+			'/status/log-file',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $controller, 'log_file_status' ),
+				'permission_callback' => array( $controller, 'can_manage_options' ),
+			)
+		);
+
+		register_rest_route(
+			'webguyjeff/error-monitor/v1',
+			'/status/log-file/discover',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $controller, 'discover_log' ),
+				'permission_callback' => array( $controller, 'can_manage_options' ),
+			)
+		);
+
+		register_rest_route(
+			'webguyjeff/error-monitor/v1',
+			'/status/debug',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $controller, 'apply_debug' ),
+				'permission_callback' => array( $controller, 'can_manage_options' ),
+			)
+		);
+
+		register_rest_route(
+			'webguyjeff/error-monitor/v1',
+			'/email/test',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $controller, 'test' ),
+				'permission_callback' => array( $controller, 'can_manage_options' ),
 			)
 		);
 	}

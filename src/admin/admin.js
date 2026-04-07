@@ -1,3 +1,3 @@
-import { init } from './js/_init'
+import { mountApp } from './js/_app'
 
-init()
+mountApp()

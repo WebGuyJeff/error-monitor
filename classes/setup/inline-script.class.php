@@ -19,9 +19,9 @@ class Inline_Script {
 	public static function get_variables() {
 		return self::JS_OBJECT_NAME . ' = ' . wp_json_encode(
 			array(
-				'settingsOK'    => Settings::email_configured(),
-				'restActionURL' => get_rest_url( null, 'webguyjeff/error-monitor/v1/action' ),
-				'restNonce'     => wp_create_nonce( 'wp_rest' ),
+				'restBaseURL' => untrailingslashit( get_rest_url( null, 'webguyjeff/error-monitor/v1' ) ),
+				'restNonce'   => wp_create_nonce( 'wp_rest' ),
+				'pluginSlug'  => 'webguyjeff-error-monitor',
 			)
 		);
 	}

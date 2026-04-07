@@ -4,8 +4,7 @@ namespace WebGuyJeff\Error_Monitor;
 /**
  * Error Monitor - PHPMailer SMTP Mail Handler.
  *
- * Handle the construction of an email using values submitted via the form, and sends the email via
- * PHPMailer using the SMTP account configured by the user.
+ * Send an email via PHPMailer using the SMTP account configured by the user.
  *
  * @package error-monitor
  * @author Jefferson Real <jeff@webguyjeff.com>

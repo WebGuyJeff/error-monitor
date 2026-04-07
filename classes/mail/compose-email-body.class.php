@@ -40,7 +40,7 @@ class Compose_Email_Body {
 				break;
 
 			case 'log':
-				$count = $data['count'] ?? 0;
+				$count              = $data['count'] ?? 0;
 				$this->email_header = sprintf(
 					'%d New PHP Error(s) Detected - %s',
 					$count,
@@ -81,7 +81,7 @@ class Compose_Email_Body {
 			array(
 				$this->email_header,
 				$content,
-				$layout
+				$layout,
 			)
 		);
 	}

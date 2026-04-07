@@ -72,7 +72,7 @@ class Settings_Sanitise {
 	private function validate_domain( $site_domain ) {
 		$ip = gethostbyname( $site_domain );
 		$ip = filter_var( $ip, FILTER_VALIDATE_IP );
-		if ( $site_domain == '' || $site_domain == null ) {
+		if ( '' === $site_domain || null === $site_domain ) {
 			return '';
 		} elseif ( $ip ) {
 			return $site_domain;

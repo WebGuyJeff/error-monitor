@@ -99,8 +99,8 @@ class Settings {
 			$updated         = true;
 		}
 
-error_log( 'Settings_Set: ' . $updated  . ' | ' . $key . ' = ' . print_r( $value, true ) );
-error_log( 'validate: ' . self::validate( array( $key => $value ) ) );
+		error_log( 'Settings_Set: ' . $updated . ' | ' . $key . ' = ' . print_r( $value, true ) );
+		error_log( 'validate: ' . self::validate( array( $key => $value ) ) );
 
 		return $updated ? update_option( 'error_monitor_settings', $current ) : false;
 	}

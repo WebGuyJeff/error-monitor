@@ -20,6 +20,6 @@ class Timestamp {
 	}
 
 	public static function unix_to_readable( $timestamp ) {
-		return date( 'H:i:s d/m/Y', $timestamp );
+		return gmdate( 'H:i:s d/m/Y', $timestamp );
 	}
 }

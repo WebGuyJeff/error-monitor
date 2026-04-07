@@ -25,10 +25,13 @@ class Log_Repository {
 		$hash         = md5( $entry['normalized'] );
 		$current_time = (int) $entry['timestamp'];
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Explicit transaction control is required for atomic update logic.
 		$wpdb->query( 'START TRANSACTION' );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Repository reads current row for dedupe and counter updates.
 		$existing = $wpdb->get_row(
 			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Internal table name is trusted and set by plugin code.
 				"SELECT * FROM {$this->table} WHERE hash = %s LIMIT 1 FOR UPDATE",
 				$hash
 			),
@@ -49,6 +52,7 @@ class Log_Repository {
 				$timestamps = array_slice( $timestamps, -100 );
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Repository writes grouped log updates to plugin-owned table.
 			$wpdb->update(
 				$this->table,
 				array(
@@ -63,6 +67,7 @@ class Log_Repository {
 
 		} else {
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Repository inserts grouped log rows to plugin-owned table.
 			$wpdb->insert(
 				$this->table,
 				array(
@@ -79,6 +84,7 @@ class Log_Repository {
 			);
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Explicit transaction control is required for atomic update logic.
 		$wpdb->query( 'COMMIT' );
 	}
 
@@ -93,8 +99,10 @@ class Log_Repository {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Repository reads recent logs from plugin-owned table for admin/API rendering.
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Internal table name is trusted and set by plugin code.
 				"SELECT * FROM {$this->table} ORDER BY last_seen DESC LIMIT %d",
 				$limit
 			),
@@ -127,9 +135,12 @@ class Log_Repository {
 		}
 
 		// Sort chronologically.
-		usort( $entries, function ( $a, $b ) {
-			return $a['timestamp'] <=> $b['timestamp'];
-		});
+		usort(
+			$entries,
+			function ( $a, $b ) {
+				return $a['timestamp'] <=> $b['timestamp'];
+			}
+		);
 
 		return $entries;
 	}
@@ -159,8 +170,10 @@ class Log_Repository {
 
 		$cutoff = time() - ( $days * DAY_IN_SECONDS );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Repository performs periodic retention cleanup on plugin-owned table.
 		$wpdb->query(
 			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Internal table name is trusted and set by plugin code.
 				"DELETE FROM {$this->table} WHERE last_seen < %d",
 				$cutoff
 			)

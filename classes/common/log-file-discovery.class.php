@@ -26,11 +26,11 @@ class Log_File_Discovery {
 		$path = $this->get_log_file_path();
 
 		return array(
-			'path'     => $path,
-			'exists'   => (bool) ( $path && file_exists( $path ) ),
-			'readable' => (bool) ( $path && is_readable( $path ) ),
-			'writable' => (bool) ( $path && is_writable( $path ) ),
-			'source'   => $this->detect_source( $path ),
+			'path'             => $path,
+			'exists'           => (bool) ( $path && file_exists( $path ) ),
+			'readable'         => (bool) ( $path && is_readable( $path ) ),
+			'writable'         => (bool) ( $path && is_writable( $path ) ),
+			'source'           => $this->detect_source( $path ),
 
 			'wp_debug'         => defined( 'WP_DEBUG' ) && WP_DEBUG,
 			'wp_debug_log'     => defined( 'WP_DEBUG_LOG' ) ? WP_DEBUG_LOG : false,

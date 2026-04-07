@@ -46,7 +46,7 @@ class Test_Controller {
 				return $result;
 
 			case 'email':
-				$subject = sprintf(
+				$subject     = sprintf(
 					'[%s] SMTP Test Email',
 					get_bloginfo( 'name' )
 				);

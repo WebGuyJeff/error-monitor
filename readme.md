@@ -1,34 +1,304 @@
 # Error Monitor
 
-This plugin aims to build upon the reliable PHPMailer plugin and expand the static contact form into
-customisable forms of any type built directly in the Gutenberg editor.
+Error Monitor is a WordPress plugin that watches your PHP error log, stores detected issues in the WordPress database, and sends notifications when new errors are found.
 
-#### Goals:
+It provides a lightweight admin interface for configuring scan behavior, SMTP delivery, log source selection, and log review.
 
-- Build any form type.
-- Preconfigured field blocks (name, email, etc) ready to drop-in.
-- No input field configuration required.
-- Customisable text block to create custom input fields.
-- All input field blocks provide their own validation/sanitisation.
+## Core Features
 
-#### Support for classic plugin forms
+- Scheduled scans using WordPress Cron
+- Manual scan trigger from wp-admin
+- Automatic log file discovery (`WP_DEBUG_LOG` or `php.ini` error log)
+- Configurable custom log file path
+- Severity classification (`error`, `warning`, `notice`)
+- Deduplication and occurrence tracking for repeated issues
+- Email notifications for new findings and scan failures
+- Built-in log viewer with grouped and raw output modes
+- Optional wp-config debug constant toggles
 
-This plugin was expanded from a classic forms plugin and as such the repo contains files speicific
-to classic plugin functionality. These should be noted when classic support is removed:
+## Plugin Workflow
 
-- CSS and JS are still located in the traditinal directories in src/. The files are imported by the block JS and CSS files, but also used to generate assets which are enqueued using the traditional method in the init class. These files are also dependent on eachother through imports, so these must be picked apart and separated into their block files carefully. There may be need to maintain some common files where more than one block rely on a file.
-- Classic classes have been moved into a classic-supports/ dir inside classes.
+1. A scheduled or manual scan runs.
+2. The scanner reads only new log entries since the last processed timestamp.
+3. Entries are parsed and normalized.
+4. Logs are inserted or updated in a custom database table.
+5. Retention cleanup removes old records.
+6. If email settings are complete, notifications are sent.
 
-#### ToDo's
+## Requirements
 
-- field variation - move to 'transform to' on block menu bar thing.
-- input name - enforce unique key within form.
-- add input types: tickbox, calendar.
-- enable questionaire type forms with inputs that change on input selections. E.g. a user chooses an option then different inputs are displayed for the required data capture.
+- WordPress
+- PHP 7.4+
+- MySQL
+- Composer (dependency and tooling management)
 
-#### Known bugs
+## Installation
 
-- Form save as post not complete (don't use!).
+1. Place the plugin in:
+   - `wp-content/plugins/error-monitor`
+2. Install PHP dependencies:
+
+```bash
+composer install
+```
+
+3. Activate **WebGuyJeff: Error Monitor** in the WordPress Plugins screen.
+
+## Configuration
+
+Open the Error Monitor admin page and configure:
+
+- **Monitor**
+  - Enable/disable scheduled monitoring
+  - Scan frequency in minutes
+  - Log retention duration
+  - Manual scan action
+- **Email**
+  - SMTP host, port, username, password
+  - Sender and recipient addresses
+  - SMTP connection test
+  - Test email sending
+- **Log File**
+  - Auto-discover log file
+  - Set a custom file path
+  - View file source and readability status
+  - Toggle `WP_DEBUG`, `WP_DEBUG_LOG`, and `WP_DEBUG_DISPLAY`
+- **Logs**
+  - Review stored log history
+  - Switch between grouped and raw views
+
+## Data Stored
+
+### WordPress Option
+
+- `error_monitor_settings`
+
+### Database Table
+
+- `{$wpdb->prefix}error_monitor_logs`
+
+Stored fields include:
+
+- Hash of normalized message
+- Original message
+- Normalized message
+- Severity
+- First seen timestamp
+- Last seen timestamp
+- Occurrence count
+- Timestamp history (limited per grouped issue)
+
+## Cron Behavior
+
+- The scan event is scheduled on plugin activation.
+- The schedule interval follows configured scan frequency.
+- Schedule is updated when frequency changes.
+- Scheduled scans are skipped when monitoring is disabled.
+- The event is unscheduled on plugin deactivation.
+
+## Development
+
+Install dependencies:
+
+```bash
+composer install
+```
+
+Run coding standards checks:
+
+```bash
+composer lint
+```
+
+Auto-fix coding standards issues:
+
+```bash
+composer lint-fix
+```
+
+Run all tests:
+
+```bash
+composer test
+```
+
+Run unit tests only:
+
+```bash
+composer test:unit
+```
+
+Run integration tests only:
+
+```bash
+composer test:integration
+```
+
+## Test Environment Setup
+
+1. Copy local test config:
+
+```bash
+cp tests/config-sample.php tests/config.php
+```
+
+2. Update `tests/config.php` for your environment.
+
+3. Install the WordPress test suite:
+
+```bash
+bin/install-wp-tests.sh
+```
+
+## License
+
+GPL-2.0-or-later.
+# Error Monitor
+
+`Error Monitor` is a WordPress plugin that scans your PHP error log, stores structured results in the WordPress database, and sends email alerts when new errors are detected.
+
+It is designed for site owners and developers who want lightweight, in-dashboard visibility of runtime issues without manually tailing server logs.
+
+## Features
+
+- Scheduled log scanning via WordPress Cron
+- Manual on-demand scan from wp-admin
+- Auto-discovery of log file path (`WP_DEBUG_LOG` or `php.ini` error log)
+- Structured log storage in a custom database table
+- Deduplication by normalized message hash
+- Severity tagging (`error`, `warning`, `notice`)
+- Email notifications through SMTP
+- Log viewer in wp-admin (grouped and raw views)
+- Optional debug constant toggles for `WP_DEBUG`, `WP_DEBUG_LOG`, and `WP_DEBUG_DISPLAY`
+
+## How It Works
+
+1. A scan runs on a configured interval (or manually).
+2. The scanner reads the log file from the end and only processes entries newer than the last seen timestamp.
+3. Entries are parsed, normalized, and classified by severity.
+4. Logs are inserted/updated in the `{$wpdb->prefix}error_monitor_logs` table.
+5. If SMTP is configured, a notification email is sent when new logs are found.
+
+## Requirements
+
+- WordPress (plugin context)
+- PHP 7.4 or higher
+- Composer (for dependencies and developer tooling)
+- MySQL
+
+## Installation
+
+1. Place this plugin in:
+   - `wp-content/plugins/error-monitor`
+2. Install dependencies:
+
+```bash
+composer install
+```
+
+3. Activate **WebGuyJeff: Error Monitor** from the WordPress Plugins screen.
+
+## Configuration
+
+After activation, open the plugin settings in wp-admin and configure:
+
+- **Monitor**
+  - Enable/disable scheduled monitoring
+  - Scan frequency in minutes
+  - Log retention period
+  - Manual scan trigger
+- **Email**
+  - SMTP host, port, username, password
+  - From and destination email addresses
+  - Connection and email test actions
+- **Log File**
+  - Auto-discover or manually set log file path
+  - View file status (exists/readable/source)
+  - Toggle WP debug constants (if `wp-config.php` is writable)
+- **Logs**
+  - Browse stored logs in grouped or raw view
+
+## Data Storage
+
+The plugin creates and maintains:
+
+- Custom table: `{$wpdb->prefix}error_monitor_logs`
+- Option: `error_monitor_settings`
+
+Stored log records include:
+
+- Raw message
+- Normalized message
+- Severity
+- First/last seen timestamps
+- Occurrence count
+- Recent timestamp history (up to 100 per grouped log)
+
+Old records are cleaned up according to the configured retention period.
+
+## Cron Behavior
+
+- The plugin schedules `error_monitor_scan_logs` on activation.
+- Schedule frequency is dynamically derived from plugin settings.
+- If monitoring is disabled, scheduled scans are skipped.
+- Cron is unscheduled on plugin deactivation.
+
+## Development
+
+### Install Dependencies
+
+```bash
+composer install
+```
+
+### Lint
+
+```bash
+composer lint
+```
+
+### Auto-fix Coding Standards
+
+```bash
+composer lint-fix
+```
+
+### Run Tests
+
+```bash
+# All tests
+composer test
+
+# Unit tests only
+composer test:unit
+
+# Integration tests only
+composer test:integration
+```
+
+## Test Environment Setup
+
+1. Copy local test config:
+
+```bash
+cp tests/config-sample.php tests/config.php
+```
+
+2. Update `tests/config.php` if needed.
+
+3. Install WordPress test suite:
+
+```bash
+bin/install-wp-tests.sh
+```
+
+## Notes
+
+- This repository still contains some outdated metadata strings in non-runtime files (for example, legacy descriptions/namespaces in `composer.json`). Runtime plugin behavior reflects the error-monitoring functionality documented here.
+
+## License
+
+GPL-2.0-or-later (plugin header includes GPL references).
 
 ---
 

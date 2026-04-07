@@ -33,7 +33,7 @@ class Cron_Hooks {
 	 * @param  array $schedules - WordPress cron schedules.
 	 * @return array $schedules - Updated schedules.
 	 */
-	public function add_dynamic_schedule( $schedules ) : array {
+	public function add_dynamic_schedule( $schedules ): array {
 
 		$minutes = (int) Settings::get( 'scan_frequency_mins' );
 		$minutes = $minutes > 0 && $minutes <= 60 ? $minutes : 30;
@@ -43,6 +43,7 @@ class Cron_Hooks {
 		$schedules[ $key ] = array(
 			'interval' => $minutes * 60,
 			'display'  => sprintf(
+				/* translators: %d: Number of minutes between scans. */
 				__( 'Every %d Minutes (Error Monitor)', 'error-monitor' ),
 				$minutes
 			),

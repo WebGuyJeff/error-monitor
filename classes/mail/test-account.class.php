@@ -44,9 +44,9 @@ class Test_Account {
 	 * @return array containing HTTP status code and a status message.
 	 */
 	public function smtp_connection( $host, $port, $username, $password ) {
-		$smtp       = new SMTP();
-		$data       = array();
-		$timeout    = 10;
+		$smtp    = new SMTP();
+		$data    = array();
+		$timeout = 10;
 
 		$this->debug_log[] = "\n";
 		$this->debug_log[] = '########## Raw debug log ##########';
@@ -54,7 +54,7 @@ class Test_Account {
 		// DEBUG_OFF for production or DEBUG_SERVER while debugging.
 		$smtp->do_debug    = SMTP::DEBUG_SERVER;
 		$smtp->Debugoutput = function ( $message, $level ) {
-			$levels      = array(
+			$levels            = array(
 				1 => '[COMMAND] ',
 				2 => '[RESPONSE] ',
 				3 => '[CONNECT] ',
@@ -75,7 +75,7 @@ class Test_Account {
 				case 465:
 					// Implicit TLS (SMTPS) – connect via ssl:// and DO NOT call startTLS().
 					$this->pretty_log[] = 'Choosing implicit TLS for port ' . $port;
-					$implicit_tls = true;
+					$implicit_tls       = true;
 					if ( stripos( $host, 'ssl://' ) !== 0 && stripos( $host, 'tls://' ) !== 0 ) {
 						$connect_host = 'ssl://' . $host;
 					}
@@ -85,7 +85,7 @@ class Test_Account {
 				case 2525:
 					// Submission ports – usually plain connect + STARTTLS.
 					$this->pretty_log[] = 'Choosing opportunistic STARTTLS for port ' . $port;
-					$use_starttls = true;
+					$use_starttls       = true;
 					break;
 
 				case 25:
@@ -93,7 +93,7 @@ class Test_Account {
 					// Port 25 often supports opportunistic STARTTLS.
 					// You can set $use_starttls = false here if you want to skip it.
 					$this->pretty_log[] = 'Choosing opportunistic STARTTLS for port ' . $port;
-					$use_starttls = true;
+					$use_starttls       = true;
 					break;
 			}
 
@@ -113,7 +113,7 @@ class Test_Account {
 				$this->pretty_log[] = 'EHLO - PASS';
 			}
 
-			$services     = $smtp->getServerExtList();
+			$services           = $smtp->getServerExtList();
 			$this->pretty_log[] = 'Server supports: ' . implode( ', ', array_keys( $services ) );
 
 			/**

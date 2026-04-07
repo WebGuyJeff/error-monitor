@@ -38,7 +38,7 @@ class Log_Formatter {
 
 			if ( isset( $grouped[ $timestamp ][ $key ] ) ) {
 
-				$grouped[ $timestamp ][ $key ]['count']++;
+				++$grouped[ $timestamp ][ $key ]['count'];
 
 			} else {
 

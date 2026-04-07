@@ -41,7 +41,7 @@ class Log_Renderer_Email_Safe {
 						'notice'  => '#3b82f6',
 						default   => 'rgba(255,255,255,0.15)',
 					};
-					?>
+	?>
 
 					<tr>
 						<td style="padding-bottom:6px;">

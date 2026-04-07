@@ -21,39 +21,9 @@ class Admin_Settings {
 	private const PLUGINNAME = 'Error Monitor';
 
 	/**
-	 * Plugin settings.
-	 */
-	private $settings = array();
-
-
-	/**
 	 * Parent menu item and dashboard.
 	 */
 	private $settings_parent;
-
-
-	/**
-	 * Settings tab: Main.
-	 */
-	private $monitor_tab;
-
-
-	/**
-	 * Settings tab: Email.
-	 */
-	private $email_tab;
-
-
-	/**
-	 * Settings tab: Logs.
-	 */
-	private $logs_tab;
-
-
-	/**
-	 * Settings tab: Log File.
-	 */
-	private $log_file_tab;
 
 
 	/**
@@ -61,12 +31,7 @@ class Admin_Settings {
 	 */
 	public function __construct() {
 		$this->settings_parent = new Admin_Settings_Parent();
-		$this->monitor_tab     = new Settings_Page_Monitor();
-		$this->email_tab       = new Settings_Page_Email();
-		$this->logs_tab        = new Settings_Page_Logs();
-		$this->log_file_tab    = new Settings_Page_Log_File();
 		$this->register();
-		$this->settings = Settings::get();
 	}
 
 
@@ -78,18 +43,18 @@ class Admin_Settings {
 		$plugin_url = admin_url( 'admin.php?page=webguyjeff-error-monitor' );
 
 		$url = array(
-			'base' => array(
+			'base'     => array(
 				'url'   => $plugin_url,
 				'slug'  => 'webguyjeff-error-monitor',
 				'title' => 'Monitor',
 			),
-			'logs' => array(
+			'logs'     => array(
 				'url'   => $plugin_url . '&tab=logs',
 				'slug'  => 'logs',
 				'title' => 'Logs',
 				'query' => '&tab=logs',
 			),
-			'email' => array(
+			'email'    => array(
 				'url'   => $plugin_url . '&tab=email',
 				'slug'  => 'email',
 				'title' => 'Email Account',
@@ -139,7 +104,7 @@ class Admin_Settings {
 	public function echo_plugin_settings_link() {
 		?>
 		<a href="/wp-admin/admin.php?page=<?php echo esc_html( self::url( 'base', 'slug' ) ); ?>">
-			<?php echo self::PLUGINNAME; ?>
+			<?php echo esc_html( self::PLUGINNAME ); ?>
 		</a>
 		<?php
 	}
@@ -152,73 +117,8 @@ class Admin_Settings {
 
 		wp_enqueue_script( 'error_monitor_admin_js' );
 		wp_enqueue_style( 'error_monitor_admin_css' );
-		$email_configured = Settings::email_configured();
-		$cron_scheduled   = Cron_Service::cron_scheduled();
-		$header           = Util::include_with_vars(
-			ERRORMONITOR_PATH . 'classes/admin/parts/admin-header.php',
-			array(
-				self::PLUGINNAME,
-				$email_configured,
-				$cron_scheduled,
-				$this->settings['last_scan_time'],
-				$this->settings['last_log_timestamp'],
-			),
-		);
 		?>
-
-		<div class="wrap adminPage">
-
-			<?php echo $header; ?>
-
-			<div class="adminPage_body">
-
-				<?php
-				// Get the active tab from the $_GET URL param.
-				$tab = isset( $_GET['tab'] ) ? $_GET['tab'] : null;
-				?>
-
-				<div class="adminPage_container">
-					<nav class="adminPage_nav">
-						<a
-							href="<?php echo esc_attr( self::url( 'base', 'url' ) ); ?>"
-							class="nav-tab<?php echo ( null === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
-						><?php echo esc_html( self::url( 'base', 'title' ) ); ?></a>
-						<a
-							href="<?php echo esc_attr( self::url( 'logs', 'url' ) ); ?>"
-							class="nav-tab<?php echo ( self::url( 'logs', 'slug' ) === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
-						><?php echo esc_html( self::url( 'logs', 'title' ) ); ?></a>
-						<a
-							href="<?php echo esc_attr( self::url( 'email', 'url' ) ); ?>"
-							class="nav-tab<?php echo ( self::url( 'email', 'slug' ) === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
-						><?php echo esc_html( self::url( 'email', 'title' ) ); ?></a>
-						<a
-							href="<?php echo esc_attr( self::url( 'log-file', 'url' ) ); ?>"
-							class="nav-tab<?php echo ( self::url( 'log-file', 'slug' ) === $tab ) ? esc_attr( ' nav-tab-active' ) : ''; ?>"
-						><?php echo esc_html( self::url( 'log-file', 'title' ) ); ?></a>
-					</nav>
-				</div>
-
-				<div class="tab_content">
-					<?php
-					switch ( $tab ) :
-						default:
-							$this->monitor_tab->output();
-							break;
-						case self::url( 'logs', 'slug' ):
-							$this->logs_tab->output();
-							break;
-						case self::url( 'email', 'slug' ):
-							$this->email_tab->output();
-							break;
-						case self::url( 'log-file', 'slug' ):
-							$this->log_file_tab->output();
-							break;
-					endswitch;
-					?>
-				</div>
-
-			</div>
-		</div>
+		<div id="errorMonitorReactRoot" class="wrap adminPage"></div>
 
 		<?php
 	}

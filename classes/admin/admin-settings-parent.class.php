@@ -54,7 +54,7 @@ class Admin_Settings_Parent {
 
 		// Add WebGuyJeff parent menu, if it doesn't exist.
 		$parent_menu = menu_page_url( self::$page_slug, false );
-		if ( false === ! ! $parent_menu ) {
+		if ( false === (bool) $parent_menu ) {
 			add_menu_page(
 				$this->admin_label . ' Settings', // page_title
 				$this->admin_label,               // menu_title

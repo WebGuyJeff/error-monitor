@@ -87,6 +87,7 @@ class Scan_Controller {
 			// Success.
 			$result['success'] = true;
 			$result['message'] = sprintf(
+				/* translators: %d: Number of new log entries found in this scan. */
 				__( 'Scan completed. %d new log(s) found.', 'error-monitor' ),
 				$total
 			);

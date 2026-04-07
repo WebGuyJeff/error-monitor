@@ -1,0 +1,2 @@
+# Optional: one relative file path per line to exclude from composer lint:changed.
+# Use for temporary legacy baseline only; prefer removing entries as files are remediated.
