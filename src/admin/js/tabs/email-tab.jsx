@@ -7,7 +7,16 @@ const isEmailConfigured = ( state ) => {
 	return required.every( ( key ) => !!state[ key ] )
 }
 
-const EmailTab = ( { settingsState, updateSetting, runTest, smtpOutput, invalidField, loadingAction } ) => {
+const EmailTab = ( {
+	settingsState,
+	updateSetting,
+	debouncedUpdateSetting,
+	flushUpdateSetting,
+	runTest,
+	smtpOutput,
+	invalidField,
+	loadingAction
+} ) => {
 	const enableTests = useMemo( () => isEmailConfigured( settingsState ), [ settingsState ] )
 
 	return createElement(
@@ -18,7 +27,8 @@ const EmailTab = ( { settingsState, updateSetting, runTest, smtpOutput, invalidF
 			label: 'Username',
 			classes: 'field-medium',
 			value: settingsState.username ?? '',
-			onChange: ( event ) => updateSetting( 'username', event.target.value ),
+			onChange: ( event ) => debouncedUpdateSetting( 'username', event.target.value ),
+			onBlur: ( event ) => flushUpdateSetting( 'username', event.target.value ),
 			invalid: invalidField === 'username',
 		} ),
 		createElement( TextInput, {
@@ -26,14 +36,16 @@ const EmailTab = ( { settingsState, updateSetting, runTest, smtpOutput, invalidF
 			type: 'password',
 			classes: 'field-medium',
 			value: settingsState.password ?? '',
-			onChange: ( event ) => updateSetting( 'password', event.target.value ),
+			onChange: ( event ) => debouncedUpdateSetting( 'password', event.target.value ),
+			onBlur: ( event ) => flushUpdateSetting( 'password', event.target.value ),
 			invalid: invalidField === 'password',
 		} ),
 		createElement( TextInput, {
 			label: 'Host',
 			classes: 'field-medium',
 			value: settingsState.host ?? '',
-			onChange: ( event ) => updateSetting( 'host', event.target.value ),
+			onChange: ( event ) => debouncedUpdateSetting( 'host', event.target.value ),
+			onBlur: ( event ) => flushUpdateSetting( 'host', event.target.value ),
 			invalid: invalidField === 'host',
 		} ),
 		createElement( SelectInput, {
@@ -56,14 +68,16 @@ const EmailTab = ( { settingsState, updateSetting, runTest, smtpOutput, invalidF
 			label: 'Sent-from email address',
 			classes: 'field-medium',
 			value: settingsState.from_email ?? '',
-			onChange: ( event ) => updateSetting( 'from_email', event.target.value ),
+			onChange: ( event ) => debouncedUpdateSetting( 'from_email', event.target.value ),
+			onBlur: ( event ) => flushUpdateSetting( 'from_email', event.target.value ),
 			invalid: invalidField === 'from_email',
 		} ),
 		createElement( TextInput, {
 			label: 'Email to send notifications to',
 			classes: 'field-medium',
 			value: settingsState.to_email ?? '',
-			onChange: ( event ) => updateSetting( 'to_email', event.target.value ),
+			onChange: ( event ) => debouncedUpdateSetting( 'to_email', event.target.value ),
+			onBlur: ( event ) => flushUpdateSetting( 'to_email', event.target.value ),
 			invalid: invalidField === 'to_email',
 		} ),
 		createElement( 'h2', null, 'Test Settings' ),

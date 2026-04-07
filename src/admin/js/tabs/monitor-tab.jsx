@@ -1,7 +1,15 @@
 import { createElement } from '@wordpress/element'
 import { TextInput, SelectInput, ToggleInput } from '../components/fields'
 
-const MonitorTab = ( { settingsState, updateSetting, runManualScan, invalidField, loadingAction } ) =>
+const MonitorTab = ( {
+	settingsState,
+	updateSetting,
+	debouncedUpdateSetting,
+	flushUpdateSetting,
+	runManualScan,
+	invalidField,
+	loadingAction
+} ) =>
 	createElement(
 		'div',
 		{ className: 'adminPage_container' },
@@ -19,7 +27,8 @@ const MonitorTab = ( { settingsState, updateSetting, runManualScan, invalidField
 			type: 'number',
 			classes: 'field-small',
 			value: settingsState.scan_frequency_mins ?? '',
-			onChange: ( event ) => updateSetting( 'scan_frequency_mins', event.target.value ),
+			onChange: ( event ) => debouncedUpdateSetting( 'scan_frequency_mins', event.target.value ),
+			onBlur: ( event ) => flushUpdateSetting( 'scan_frequency_mins', event.target.value ),
 			invalid: invalidField === 'scan_frequency_mins',
 			attrs: {
 				step: 1,

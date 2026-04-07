@@ -99,10 +99,17 @@ class Settings {
 			$updated         = true;
 		}
 
-		error_log( 'Settings_Set: ' . $updated . ' | ' . $key . ' = ' . print_r( $value, true ) );
-		error_log( 'validate: ' . self::validate( array( $key => $value ) ) );
+		$yesNO = $updated ? 'Yes' : 'No';
+		$validYesNo = self::validate( array( $key => $value ) ) ? 'Yes' : 'No';
+		error_log( 'Settings::set | updated: ' . $yesNO . ' / valid: ' . $validYesNo . ' | ' . $key . ' = ' . print_r( $value, true ) );
 
-		return $updated ? update_option( 'error_monitor_settings', $current ) : false;
+		if ( ! $updated ) {
+			return false;
+		}
+
+		update_option( 'error_monitor_settings', $current );
+
+		return true;
 	}
 
 
@@ -153,12 +160,20 @@ class Settings {
 					break;
 
 				case 'host':
-					if ( is_string( $value ) ) {
-						$ip    = gethostbyname( $value );
-						$valid = ( filter_var( $ip, FILTER_VALIDATE_IP ) ) ? true : false;
-					} else {
+					if ( ! is_string( $value ) ) {
 						$valid = false;
+						break;
 					}
+					$value = trim( $value );
+					if ( filter_var( $value, FILTER_VALIDATE_IP ) ) {
+						$valid = true;
+						break;
+					}
+					// Validate hostname (RFC-compliant-ish).
+					$valid = (bool) preg_match(
+						'/^(?=.{1,253}$)(?!-)([a-zA-Z0-9-]{1,63}\.)*[a-zA-Z0-9-]{1,63}$/',
+						$value
+					);
 					break;
 
 				case 'port':

@@ -53,6 +53,8 @@ const useAdminActions = () => {
 		logStatus: 0,
 		logs: 0,
 	} )
+	const debounceTimers = useRef( {} )
+	const settingRequestKeys = useRef( {} )
 
 	const loadBootstrap = async () => {
 		const requestKey = requestKeys.current.bootstrap + 1
@@ -77,22 +79,46 @@ const useAdminActions = () => {
 	}
 
 	const updateSetting = async ( key, value ) => {
-		setInvalidField( '' )
-		const previous = settingsState[ key ]
-
 		setSettingsState( ( current ) => ( { ...current, [ key ]: value } ) )
+
+		const requestKey = ( settingRequestKeys.current[ key ] || 0 ) + 1
+
+		settingRequestKeys.current[ key ] = requestKey
 
 		const result = await sendRequest( 'settings', {
 			method: 'POST',
 			body: { key, value },
 		} )
 
-		if ( !result.ok ) {
-			setSettingsState( ( current ) => ( { ...current, [ key ]: previous } ) )
-			if ( result?.data?.field ) {
-				setInvalidField( result.data.field )
-			}
+		if ( settingRequestKeys.current[ key ] !== requestKey ) {
+			return
 		}
+
+		if ( result.ok ) {
+			setInvalidField( '' )
+		} else if ( result?.data?.field ) {
+			setInvalidField( result.data.field )
+		}
+	}
+
+	const debouncedUpdateSetting = ( key, value, delay = 400 ) => {
+		setSettingsState( ( current ) => ( { ...current, [ key ]: value } ) )
+
+		if ( debounceTimers.current[ key ] ) {
+			clearTimeout( debounceTimers.current[ key ] )
+		}
+
+		debounceTimers.current[ key ] = setTimeout( () => {
+			updateSetting( key, value )
+		}, delay )
+	}
+
+	const flushUpdateSetting = ( key, value ) => {
+		if ( debounceTimers.current[ key ] ) {
+			clearTimeout( debounceTimers.current[ key ] )
+		}
+
+		updateSetting( key, value )
 	}
 
 	const refreshLogStatus = async () => {
@@ -189,6 +215,8 @@ const useAdminActions = () => {
 		logsHTML,
 		loadBootstrap,
 		updateSetting,
+		debouncedUpdateSetting,
+		flushUpdateSetting,
 		refreshLogStatus,
 		discoverLog,
 		runManualScan,

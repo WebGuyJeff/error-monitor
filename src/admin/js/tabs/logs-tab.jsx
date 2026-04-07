@@ -1,6 +1,10 @@
 import { createElement, useRef, useEffect } from '@wordpress/element'
 
-const LogsTab = ( { logsHTML, fetchLogs, loadingAction } ) => {
+const LogsTab = ( {
+	logsHTML,
+	fetchLogs,
+	loadingAction
+} ) => {
 	const logRef = useRef( null )
 
 	useEffect( () => {

@@ -10,13 +10,20 @@ class Log_Scanner {
 	/**
 	 * Run scan and populate properties.
 	 */
-	public function scan(): void {
+	public function scan(): array {
 
-		$discovery = new Log_File_Discovery();
-		$log_file  = $discovery->get_log_file_path();
-
+		$log_file = Settings::get( 'log_file_path' );
 		if ( ! $log_file || ! file_exists( $log_file ) || ! is_readable( $log_file ) ) {
-			return;
+			// No log file configured in settings.
+
+			$discovery = new Log_File_Discovery();
+			$log_file  = $discovery->get_log_file_path();
+
+			if ( ! $log_file || ! file_exists( $log_file ) || ! is_readable( $log_file ) ) {
+				// No log file auto-discovered.
+
+				return array( false, __( 'No log file configured or not discoverable.', 'error-monitor' ) );
+			}
 		}
 
 		$last_timestamp = Settings::get( 'last_log_timestamp' );
@@ -34,6 +41,8 @@ class Log_Scanner {
 		if ( $new_timestamp > $last_timestamp ) {
 			Settings::set( 'last_log_timestamp', (int) $new_timestamp );
 		}
+
+		return array( true, __( 'Scan complete', 'error-monitor' ) );
 	}
 
 

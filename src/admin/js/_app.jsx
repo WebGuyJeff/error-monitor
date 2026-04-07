@@ -36,6 +36,8 @@ const App = () => {
 		logsHTML,
 		loadBootstrap,
 		updateSetting,
+		debouncedUpdateSetting,
+		flushUpdateSetting,
 		refreshLogStatus,
 		discoverLog,
 		runManualScan,
@@ -80,6 +82,8 @@ const App = () => {
 	let tabContent = createElement( MonitorTab, {
 		settingsState,
 		updateSetting,
+		debouncedUpdateSetting,
+		flushUpdateSetting,
 		runManualScan,
 		invalidField,
 		loadingAction,
@@ -89,6 +93,8 @@ const App = () => {
 		tabContent = createElement( EmailTab, {
 			settingsState,
 			updateSetting,
+			debouncedUpdateSetting,
+			flushUpdateSetting,
 			runTest,
 			smtpOutput,
 			invalidField,
@@ -106,6 +112,9 @@ const App = () => {
 		tabContent = createElement( LogFileTab, {
 			settingsState,
 			updateSetting,
+			debouncedUpdateSetting,
+			flushUpdateSetting,
+			invalidField,
 			discoverLog,
 			status,
 			toggleDebug,

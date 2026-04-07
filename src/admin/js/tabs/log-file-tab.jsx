@@ -1,7 +1,16 @@
 import { createElement } from '@wordpress/element'
 import { TextInput } from '../components/fields'
 
-const LogFileTab = ( { settingsState, updateSetting, discoverLog, status, toggleDebug, loadingAction } ) =>
+const LogFileTab = ( {
+	settingsState,
+	debouncedUpdateSetting,
+	flushUpdateSetting,
+	discoverLog,
+	status,
+	toggleDebug,
+	invalidField,
+	loadingAction
+} ) =>
 	createElement(
 		'div',
 		{ className: 'adminPage_container' },
@@ -23,7 +32,9 @@ const LogFileTab = ( { settingsState, updateSetting, discoverLog, status, toggle
 			label: 'Log File Path',
 			description: 'Configure the path to the error log file.',
 			value: settingsState.log_file_path ?? '',
-			onChange: ( event ) => updateSetting( 'log_file_path', event.target.value ),
+			onChange: ( event ) => debouncedUpdateSetting( 'log_file_path', event.target.value ),
+			onBlur: ( event ) => flushUpdateSetting( 'log_file_path', event.target.value ),
+			invalid: invalidField === 'log_file_path',
 		} ),
 		createElement(
 			'div',

@@ -39,7 +39,10 @@ class Scan_Controller {
 
 		try {
 
-			$scanner->scan();
+			$scan_result = $scanner->scan();
+			if ( ! $scan_result[0] ) {
+				throw new \Exception( $scan_result[1] );
+			}
 
 			$entries = is_array( $scanner->entries ) ? $scanner->entries : array();
 
@@ -95,13 +98,14 @@ class Scan_Controller {
 			$this->send_success_email( $entries, $result );
 
 		} catch ( \Throwable $e ) {
-
 			error_log( 'Error_Monitor Scan Failure: ' . $e->getMessage() );
 
-			$result['success'] = false;
-			$result['message'] = __( 'Scan failed. Check logs for details.', 'error-monitor' );
+			$error_msg = $scan_result[0] ? $scan_result[1] : $e->getMessage();
 
-			$this->send_failure_email( $e->getMessage() );
+			$result['success'] = false;
+			$result['message'] = __( 'Scan failed.', 'error-monitor' ) . ' ' . $error_msg;
+
+			$this->send_failure_email( $result['message'] );
 		}
 
 		return $result;

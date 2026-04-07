@@ -110,8 +110,9 @@ class Action_Controller {
 	public function manual_scan(): WP_REST_Response {
 		$controller = new Scan_Controller();
 		$result     = $controller->run( true );
+		$status     = $result['success'] ? 200 : 500;
 
-		return $this->response( 200, $result['message'], $result );
+		return $this->response( $status, $result['message'], $result );
 	}
 
 	/**

@@ -3,7 +3,16 @@ import { createElement } from '@wordpress/element'
 const Field = ( { children, classes = '' } ) =>
 	createElement( 'div', { className: `field ${classes}`.trim() }, children )
 
-const TextInput = ( { label, value, onChange, type = 'text', description, classes = '', invalid = false, attrs = {} } ) =>
+const TextInput = ( {
+	label,
+	value,
+	onChange,
+	type = 'text',
+	description,
+	classes = '',
+	invalid = false,
+	attrs = {}
+} ) =>
 	createElement(
 		Field,
 		{ classes: `field-singleline ${classes}` },
@@ -19,7 +28,15 @@ const TextInput = ( { label, value, onChange, type = 'text', description, classe
 		description ? createElement( 'p', { className: 'field__description' }, description ) : null,
 	)
 
-const SelectInput = ( { label, value, onChange, options, description, classes = '', invalid = false } ) =>
+const SelectInput = ( {
+	label,
+	value,
+	onChange,
+	options,
+	description,
+	classes = '',
+	invalid = false
+} ) =>
 	createElement(
 		Field,
 		{ classes: `field-singleline field-select ${classes}` },
@@ -39,7 +56,12 @@ const SelectInput = ( { label, value, onChange, options, description, classes = 
 		description ? createElement( 'p', { className: 'field__description' }, description ) : null,
 	)
 
-const ToggleInput = ( { label, checked, onChange, description } ) =>
+const ToggleInput = ( {
+	label,
+	checked,
+	onChange,
+	description
+} ) =>
 	createElement(
 		Field,
 		{ classes: 'field-toggle' },
