@@ -1,8 +1,5 @@
 import { useRef, useState } from '@wordpress/element'
-import { fetchHttpRequest, buildAPIURL } from '../utils'
-import { useAdminInlinedVars } from './use-admin-inlined-vars'
-
-const { restBaseURL = '', restNonce } = useAdminInlinedVars || {}
+import { useAPI } from './use-api'
 
 const useAdminActions = ( { showToast } ) => {
 	const [ settingsState, setSettingsState ] = useState( {} )
@@ -23,12 +20,16 @@ const useAdminActions = ( { showToast } ) => {
 	} )
 	const debounceTimers = useRef( {} )
 	const settingRequestKeys = useRef( {} )
+	const { sendRequest } = useAPI( { showToast } )
 
 	const loadBootstrap = async () => {
 		const requestKey = requestKeys.current.bootstrap + 1
 
 		requestKeys.current.bootstrap = requestKey
-		const result = await sendRequest( 'bootstrap', { method: 'GET', showFeedback: false } )
+		const result = await sendRequest( 'bootstrap', {
+			method: 'GET',
+			showFeedback: false
+		} )
 
 		if ( requestKeys.current.bootstrap !== requestKey ) {
 			return result
@@ -41,23 +42,6 @@ const useAdminActions = ( { showToast } ) => {
 				status: result.data.status || {},
 				tabs: Array.isArray( result.data.tabs ) ? result.data.tabs : [],
 			} )
-		}
-
-		return result
-	}
-
-	const sendRequest = async ( path, { method = 'GET', body, showFeedback = true, query = {} } = {} ) => {
-		const result = await fetchHttpRequest( buildAPIURL( restBaseURL, path, query ), {
-			method,
-			headers: {
-				'X-WP-Nonce': restNonce,
-				'Content-Type': 'application/json',
-			},
-			body: body ? JSON.stringify( body ) : undefined,
-		} )
-
-		if ( showFeedback && result?.output?.[ 0 ] && showToast ) {
-			showToast( result.output[ 0 ], result.ok ? 'success' : 'danger' )
 		}
 
 		return result
