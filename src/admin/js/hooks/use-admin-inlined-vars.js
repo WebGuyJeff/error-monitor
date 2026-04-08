@@ -4,11 +4,11 @@
  * Destructuring for verbose import.
  */
 
-const getWpInlinedVars = () => {
+const getAdminInlinedVars = () => {
 	if ( typeof errorMonitorInlinedScript === 'undefined' ) return false
 
 	return { ...errorMonitorInlinedScript }
 }
-const errorMonitorInlinedVars = getWpInlinedVars()
+const useAdminInlinedVars = getAdminInlinedVars()
 
-export { errorMonitorInlinedVars }
+export { useAdminInlinedVars }

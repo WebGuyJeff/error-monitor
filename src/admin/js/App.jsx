@@ -1,12 +1,9 @@
 import { createRoot, createElement, Fragment, useEffect, useState } from '@wordpress/element'
-import { errorMonitorInlinedVars } from './_get-wp-inlined-vars'
-import { useAdminActions } from './use-admin-actions'
-import { Header } from './components/header'
-import { TabNav } from './components/tab-nav'
-import { MonitorTab } from './tabs/monitor-tab'
-import { EmailTab } from './tabs/email-tab'
-import { LogFileTab } from './tabs/log-file-tab'
-import { LogsTab } from './tabs/logs-tab'
+import { useAdminActions, useAdminInlinedVars } from './hooks'
+import { Header, Footer, TabNav } from './components/layout'
+import { MonitorTab, LogsTab, EmailTab, LogFileTab } from './tabs'
+import { useToast } from './hooks/use-toast'
+import { Toast } from './components/feedback'
 
 const getActiveTabFromURL = () => {
 	const query = new URLSearchParams( window.location.search )
@@ -26,6 +23,7 @@ const updateHistoryTab = ( tab ) => {
 }
 
 const App = () => {
+	const { toasts, showToast } = useToast()
 	const {
 		settingsState,
 		status,
@@ -44,7 +42,7 @@ const App = () => {
 		runTest,
 		toggleDebug,
 		fetchLogs,
-	} = useAdminActions()
+	} = useAdminActions( { showToast } )
 	const [ activeTab, setActiveTab ] = useState( getActiveTabFromURL() )
 	const pluginName = shellData.pluginName || 'Error Monitor'
 	const statusInfo = shellData.status || {}
@@ -122,23 +120,33 @@ const App = () => {
 		} )
 	}
 
-	return createElement(
-		Fragment,
-		null,
-		createElement( Header, { pluginName, status: statusInfo } ),
-		createElement(
-			'div',
-			{ className: 'adminPage_body' },
-			createElement( TabNav, { activeTab, tabs, onSelectTab: handleTabSelect } ),
-			createElement( 'div', { className: 'tab_content' }, tabContent ),
-		),
+	return (
+		<>
+			<Header pluginName={pluginName} status={statusInfo} />
+
+			<div className="adminPage_body">
+				<TabNav
+					activeTab={activeTab}
+					tabs={tabs}
+					onSelectTab={handleTabSelect}
+				/>
+
+				<div className="tab_content">
+					{tabContent}
+				</div>
+			</div>
+
+			<Footer pluginName={pluginName} />
+
+			<Toast toasts={toasts} />
+		</>
 	)
 }
 
 const mountApp = () => {
 	const rootNode = document.getElementById( 'errorMonitorReactRoot' )
 
-	if ( !rootNode || !errorMonitorInlinedVars ) {
+	if ( !rootNode || !useAdminInlinedVars ) {
 		return
 	}
 

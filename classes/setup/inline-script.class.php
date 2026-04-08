@@ -21,7 +21,7 @@ class Inline_Script {
 			array(
 				'restBaseURL' => untrailingslashit( get_rest_url( null, 'webguyjeff/error-monitor/v1' ) ),
 				'restNonce'   => wp_create_nonce( 'wp_rest' ),
-				'pluginSlug'  => 'webguyjeff-error-monitor',
+				'pluginSlug'  => Admin_Settings::url( 'base', 'slug' ),
 			)
 		);
 	}

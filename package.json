@@ -2,7 +2,8 @@
 	"name": "error-monitor",
 	"version": "0.8.0",
 	"dependencies": {
-		"@wordpress/i18n": "^6.8.0"
+		"@wordpress/i18n": "^6.8.0",
+		"prop-types": "^15.8.1"
 	},
 	"devDependencies": {
 		"@wordpress/env": "^10.38.0",

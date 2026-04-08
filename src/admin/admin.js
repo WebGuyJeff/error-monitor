@@ -1,3 +1,3 @@
-import { mountApp } from './js/_app'
+import { mountApp } from './js/App'
 
 mountApp()

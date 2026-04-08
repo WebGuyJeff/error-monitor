@@ -87,13 +87,13 @@ class Admin_Settings {
 	 */
 	public function register_admin_menu() {
 		add_submenu_page(
-			$this->settings_parent::$page_slug, // parent_slug.
-			self::PLUGINNAME,                         // page_title.
-			self::PLUGINNAME,                         // menu_title.
-			'manage_options',                         // capability.
+			$this->settings_parent::$page_slug,      // parent_slug.
+			self::PLUGINNAME,                        // page_title.
+			self::PLUGINNAME,                        // menu_title.
+			'manage_options',                        // capability.
 			self::url( 'base', 'slug' ),             // menu_slug.
-			array( &$this, 'create_settings_page' ),  // function.
-			null,                                     // position.
+			array( &$this, 'create_settings_page' ), // function.
+			null,                                    // position.
 		);
 	}
 
@@ -117,9 +117,9 @@ class Admin_Settings {
 
 		wp_enqueue_script( 'error_monitor_admin_js' );
 		wp_enqueue_style( 'error_monitor_admin_css' );
+
 		?>
 		<div id="errorMonitorReactRoot" class="wrap adminPage"></div>
-
 		<?php
 	}
 }
