@@ -2,19 +2,14 @@
 namespace WebGuyJeff\Error_Monitor;
 
 /**
- * A library of helper functions for WordPress.
+ * Template hanlding utilities.
  *
  * @package error-monitor
  * @author Jefferson Real <jeff@webguyjeff.com>
  * @copyright Copyright 2023 Jefferson Real
  */
 
-
-/**
- * Utility methods.
- */
-class Util {
-
+class Template {
 
 	/**
 	 * Include with variables.

@@ -35,7 +35,7 @@ class Scan_Controller {
 			'last'    => null,
 		);
 
-		$scanner = new Log_Scanner();
+		$scanner = new Scan_Logs();
 
 		try {
 
@@ -46,7 +46,7 @@ class Scan_Controller {
 
 			$entries = is_array( $scanner->entries ) ? $scanner->entries : array();
 
-			$repo  = new Log_Repository();
+			$repo  = new Db_Logs_Table();
 			$total = 0;
 
 			foreach ( $entries as $entry ) {
@@ -130,7 +130,7 @@ class Scan_Controller {
 			$result['total']
 		);
 
-		$compose = new Compose_Email_Body(
+		$compose = new Mail_Compose(
 			'log',
 			array(
 				'count'   => $result['total'],

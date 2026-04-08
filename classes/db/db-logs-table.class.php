@@ -8,7 +8,7 @@ namespace WebGuyJeff\Error_Monitor;
  *
  * @package error-monitor
  */
-class Log_Repository {
+class Db_Logs_Table {
 
 	private string $table;
 

@@ -1,6 +1,6 @@
 <?php
 use WebGuyJeff\Error_Monitor\Log_Renderer_Email_Safe;
-use WebGuyJeff\Error_Monitor\Admin_Settings;
+use WebGuyJeff\Error_Monitor\Admin_Page;
 
 [ $data ] = $variables;
 
@@ -11,7 +11,7 @@ $entries   = is_array( $data['entries'] ?? null ) ? $data['entries'] : array();
 $first     = $data['first'] ?? null;
 $last      = $data['last'] ?? null;
 $duration  = ( $first && $last ) ? ( $last - $first ) : 0;
-$admin_url = Admin_Settings::url( 'logs', 'url' );
+$admin_url = Admin_Page::url( 'logs', 'url' );
 ?>
 
 <table id="WRAPPER_TABLE" width="100%" cellpadding="0" cellspacing="0" role="presentation">

@@ -12,7 +12,7 @@ namespace WebGuyJeff\Error_Monitor;
  * @license GPL3+
  * @link https://webguyjeff.com
  */
-class Admin_Settings {
+class Admin_Page {
 
 
 	/**
@@ -30,7 +30,7 @@ class Admin_Settings {
 	 * Setup the class.
 	 */
 	public function __construct() {
-		$this->settings_parent = new Admin_Settings_Parent();
+		$this->settings_parent = new Admin_Page_Parent();
 		$this->register();
 	}
 

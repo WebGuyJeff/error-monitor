@@ -15,7 +15,7 @@ namespace WebGuyJeff\Error_Monitor;
  * @link https://webguyjeff.com
  */
 
-class Admin_Settings_Parent {
+class Admin_Page_Parent {
 
 
 	/**

@@ -22,7 +22,14 @@ use PHPMailer\PHPMailer\Exception;
 require ERRORMONITOR_PATH . 'vendor/autoload.php';
 
 
-class Test_Account {
+class Mail_Test {
+
+	/**
+	 * Plugin settings.
+	 *
+	 * @var array Settings returned from Settings::get().
+	 */
+	private $settings = array();
 
 	/**
 	 * Pretty log messages for test output.
@@ -38,12 +45,91 @@ class Test_Account {
 	 */
 	private $debug_log = array();
 
+
 	/**
-	 * Test SMTP connection.
+	 * Handle test requests.
+	 */
+	public function run( $type ) {
+
+		if ( ! is_string( $type ) || empty( $type ) ) {
+			error_log( 'Error_Monitor: Mail_Test::run recieved no test type.' );
+			return array( 400, 'Test failed: Received an invalid request.' );
+		}
+
+		$this->settings = Settings::get();
+		if ( false === (bool) $this->settings ) {
+			return array( 500, 'There was a problem retrieving your SMTP settings from the database.' );
+		}
+
+		if ( ! Settings::email_configured( $this->settings ) ) {
+			return array( 500, 'Email settings must be configured before performing this action.' );
+		}
+
+		switch ( $type ) {
+			case 'smtp':
+				$result = $this->smtp_connect();
+				return $result;
+
+			case 'email':
+				$result = $this->smtp_send();
+				return $result;
+
+			default:
+				error_log( 'Error_Monitor: Mail_Test::run recieved an unknown test type.' );
+				return array( 400, 'Test failed:. The action requested was not possible.' );
+		}
+	}
+
+
+	/**
+	 * SMTP send email test.
 	 *
 	 * @return array containing HTTP status code and a status message.
 	 */
-	public function smtp_connection( $host, $port, $username, $password ) {
+	private function smtp_send() {
+		$site_name   = get_bloginfo( 'name' );
+		$subject     = "[$site_name] SMTP Test Email";
+		$from_name   = $site_name;
+		$reply_name  = $from_name;
+		$reply_email = $settings['from_email'];
+		$site_domain = wp_parse_url( home_url(), PHP_URL_HOST );
+
+		$compose = new Mail_Compose( 'test' );
+		$mailer  = new Mail_SMTP();
+
+		$result = $mailer->send(
+			$this->settings['host'],
+			$this->settings['port'],
+			$this->settings['username'],
+			$this->settings['password'],
+			$this->settings['to_email'],
+			$this->settings['from_email'],
+			$from_name,
+			$reply_name,
+			$reply_email,
+			$subject,
+			$compose->html(),
+			$compose->plaintext(),
+			$site_domain
+		);
+		if ( $result[0] < 300 ) {
+			$result[1] = __( 'Test email sent to ', 'error-monitor' ) . $this->settings['to_email'];
+		}
+		return $result;
+	}
+
+
+	/**
+	 * SMTP connect test.
+	 *
+	 * @return array containing HTTP status code and a status message.
+	 */
+	private function smtp_connect() {
+		$host     = $this->settings['host'];
+		$port     = $this->settings['port'];
+		$username = $this->settings['username'];
+		$password = $this->settings['password'];
+
 		$smtp    = new SMTP();
 		$data    = array();
 		$timeout = 10;
@@ -151,11 +237,21 @@ class Test_Account {
 			}
 
 			$this->pretty_log[] = '🟢 All tests passed! SMTP configuration is valid.';
-			return array( 200, $this->pretty_log );
+			return array(
+				200,
+				__( 'SMTP connection successful.', 'error-monitor' ),
+				$this->pretty_log
+			);
 
 		} catch ( Exception $e ) {
 			$this->pretty_log[] = '🔴 SMTP test failed: ' . $e->getMessage();
 			return array( 500, array_merge( $this->pretty_log, $this->debug_log ) );
+
+			return array(
+				500,
+				__( 'SMTP connection failed.', 'error-monitor' ),
+				array_merge( $this->pretty_log, $this->debug_log )
+			);
 		}
 
 		// Whatever happened, close the connection.

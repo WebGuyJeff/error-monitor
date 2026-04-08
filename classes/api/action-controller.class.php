@@ -162,7 +162,7 @@ class Action_Controller {
 	 * Fetch logs in requested format.
 	 */
 	public function fetch_logs( WP_REST_Request $request ): WP_REST_Response {
-		$repo    = new Log_Repository();
+		$repo    = new Db_Logs_Table();
 		$entries = $repo->get_recent_logs( 300 );
 		$view    = sanitize_text_field( $request->get_param( 'view' ) ?: 'grouped' );
 
@@ -191,14 +191,15 @@ class Action_Controller {
 	 * Run SMTP/email test actions.
 	 */
 	public function test( WP_REST_Request $request ): WP_REST_Response {
-		$payload    = $this->get_payload( $request );
-		$type       = sanitize_text_field( $payload['type'] ?? '' );
-		$controller = new Test_Controller();
-		$result     = $controller->perform_test( array( 'test' => $type ) );
+		$payload = $this->get_payload( $request );
+		$type    = sanitize_text_field( $payload['type'] ?? '' );
+		$tester  = new Mail_Test();
+		$result  = $tester->run( $type );
 
 		$status = isset( $result[0] ) ? (int) $result[0] : 500;
 		$output = isset( $result[1] ) ? $result[1] : 'Unknown response.';
+		$data   = isset( $result[2] ) ? $result[2] : array();
 
-		return $this->response( $status, $output );
+		return $this->response( $status, $output, $data );
 	}
 }

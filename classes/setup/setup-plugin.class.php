@@ -2,7 +2,7 @@
 namespace WebGuyJeff\Error_Monitor;
 
 /**
- * Error Monitor - Initialisation.
+ * Error Monitor - Setup_Plugin.
  *
  * Setup styles and helper functions for this plugin.
  *
@@ -12,7 +12,7 @@ namespace WebGuyJeff\Error_Monitor;
  * @license GPL3+
  * @link https://webguyjeff.com
  */
-class Init {
+class Setup_Plugin {
 
 	/**
 	 * Store if this is admin screen check.
@@ -26,17 +26,10 @@ class Init {
 	 */
 	public function __construct() {
 		$this->is_admin = is_admin() ? true : false;
-	}
-
-
-	/**
-	 * Setup the plugin.
-	 */
-	public function setup() {
 		( new Settings_Registration() )->register();
 		$this->maybe_create_log_table();
 		if ( $this->is_admin ) {
-			new Admin_Settings();
+			new Admin_Page();
 			( new Log_File_Discovery() )->maybe_bootstrap_setting();
 		}
 		add_action( 'rest_api_init', array( $this, 'register_rest_api_routes' ), 10, 0 );
@@ -52,7 +45,7 @@ class Init {
 		if ( str_contains( $hook_suffix, 'error-monitor' ) ) {
 			wp_register_style( 'error_monitor_admin_css', ERRORMONITOR_URL . 'build/admin/css/error-monitor-admin.css', array(), filemtime( ERRORMONITOR_PATH . 'build/admin/css/error-monitor-admin.css' ), 'all' );
 			wp_register_script( 'error_monitor_admin_js', ERRORMONITOR_URL . 'build/admin/js/error-monitor-admin.js', array(), filemtime( ERRORMONITOR_PATH . 'build/admin/js/error-monitor-admin.js' ), false );
-			wp_add_inline_script( 'error_monitor_admin_js', Inline_Script::get_variables(), 'before' );
+			wp_add_inline_script( 'error_monitor_admin_js', Setup_Inline_Script::get_variables(), 'before' );
 			if ( ! wp_script_is( 'webguyjeff_icons', 'registered' ) ) {
 				wp_register_style( 'webguyjeff_icons', ERRORMONITOR_URL . 'dashicons/css/webguyjeff-icons.css', array(), filemtime( ERRORMONITOR_PATH . 'dashicons/css/webguyjeff-icons.css' ), 'all' );
 			}

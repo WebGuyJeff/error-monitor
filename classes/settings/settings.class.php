@@ -126,13 +126,19 @@ class Settings {
 			return false;
 		}
 
-		if ( empty( $settings['from_email'] )
-			|| empty( $settings['to_email'] )
-			|| empty( $settings['username'] )
-			|| empty( $settings['password'] )
-			|| empty( $settings['host'] )
-			|| empty( $settings['port'] ) ) {
-			return false;
+		$email_settings = array(
+			'username',
+			'password',
+			'host',
+			'port',
+			'from_email',
+			'to_email',
+		);
+
+		foreach ( $email_settings as $setting ) {
+			if ( ! isset( $settings[ $setting ] ) || empty( $settings[ $setting ] ) ) {
+				return false;
+			}
 		}
 
 		return true;

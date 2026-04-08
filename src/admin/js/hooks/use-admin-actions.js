@@ -134,10 +134,10 @@ const useAdminActions = ( { showToast } ) => {
 			method: 'POST',
 			body: { type },
 		} )
-		const output = Array.isArray( result?.output ) ? result.output : [ 'No output returned.' ]
+		const data = Array.isArray( result?.data ) ? result.data : [ 'No output returned.' ]
 
 		if ( type === 'smtp' ) {
-			setSmtpOutput( output.map( ( message ) => ( { message, status: result.ok ? 'success' : 'danger' } ) ) )
+			setSmtpOutput( data.map( ( message ) => ( { message, status: result.ok ? 'success' : 'danger' } ) ) )
 		}
 		setLoadingAction( '' )
 	}

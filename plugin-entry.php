@@ -33,5 +33,4 @@ register_activation_hook( __FILE__, array( Cron_Hooks::class, 'activate' ) );
 register_deactivation_hook( __FILE__, array( Cron_Hooks::class, 'deactivate' ) );
 
 // Setup the plugin.
-$init = new Init();
-$init->setup();
+$init = new Setup_Plugin();

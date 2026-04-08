@@ -18,9 +18,9 @@ use function get_bloginfo;
 use function wp_parse_url;
 use function esc_html;
 
-class Compose_Email_Body {
+class Mail_Compose {
 
-	const TEMPLATE_PATH = ERRORMONITOR_PATH . 'classes/mail/email-templates/';
+	const TEMPLATE_PATH = ERRORMONITOR_PATH . 'classes/mail/templates/';
 
 	private string $type;
 	private array $data;
@@ -60,14 +60,14 @@ class Compose_Email_Body {
 		switch ( $this->type ) {
 
 			case 'test':
-				$content = Util::include_with_vars(
+				$content = Template::include_with_vars(
 					self::TEMPLATE_PATH . 'partial-test.php',
 					array( $this->data )
 				);
 				break;
 
 			case 'log':
-				$content = Util::include_with_vars(
+				$content = Template::include_with_vars(
 					self::TEMPLATE_PATH . 'partial-log.php',
 					array( $this->data )
 				);
@@ -76,7 +76,7 @@ class Compose_Email_Body {
 
 		$layout = ( $this->type === 'log' ) ? 'full-width' : 'centered';
 
-		return Util::include_with_vars(
+		return Template::include_with_vars(
 			self::TEMPLATE_PATH . 'email.php',
 			array(
 				$this->email_header,

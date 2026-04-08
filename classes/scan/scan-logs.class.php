@@ -2,7 +2,7 @@
 
 namespace WebGuyJeff\Error_Monitor;
 
-class Log_Scanner {
+class Scan_Logs {
 
 	public array $entries = array();
 

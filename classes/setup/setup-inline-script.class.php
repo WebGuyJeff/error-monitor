@@ -12,7 +12,7 @@ namespace WebGuyJeff\Error_Monitor;
  * @license GPL3+
  * @link https://webguyjeff.com
  */
-class Inline_Script {
+class Setup_Inline_Script {
 
 	private const JS_OBJECT_NAME = 'errorMonitorInlinedScript';
 
@@ -21,7 +21,7 @@ class Inline_Script {
 			array(
 				'restBaseURL' => untrailingslashit( get_rest_url( null, 'webguyjeff/error-monitor/v1' ) ),
 				'restNonce'   => wp_create_nonce( 'wp_rest' ),
-				'pluginSlug'  => Admin_Settings::url( 'base', 'slug' ),
+				'pluginSlug'  => Admin_Page::url( 'base', 'slug' ),
 			)
 		);
 	}
