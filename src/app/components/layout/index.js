@@ -1,0 +1,6 @@
+export { Page } from './Page/Page'
+export { Panel } from './Panel/Panel'
+export { Card } from './Card/Card'
+export { Header } from './Header/Header'
+export { Footer } from './Footer/Footer'
+export { Tabs } from './Tabs/Tabs'

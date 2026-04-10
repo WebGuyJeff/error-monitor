@@ -2,17 +2,13 @@
 namespace WebGuyJeff\Error_Monitor;
 
 /**
- * Error Monitor - Get Settings and Validate From DB.
+ * Get Settings and Validate From DB.
  *
  * This class fetches the settings from the database and validates their
  * values before passing them back to caller. If ANY of the settings are
  * invalid, returns false.
  *
  * @package error-monitor
- * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2026, Jefferson Real
- * @license GPL3+
- * @link https://webguyjeff.com
  */
 
 // Import PHPMailer for use of the email validation method.

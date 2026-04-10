@@ -4,18 +4,18 @@
  */
 
 // Composer autoloader
-require_once dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php';
+require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
 // Give access to tests_add_filter() function
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
 if ( ! $_tests_dir ) {
-    $_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
+	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
 }
 
 if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
-    echo "Could not find $_tests_dir/includes/functions.php\n";
-    exit( 1 );
+	echo "Could not find $_tests_dir/includes/functions.php\n";
+	exit( 1 );
 }
 
 // Load the WordPress tests functions
@@ -25,7 +25,7 @@ require_once $_tests_dir . '/includes/functions.php';
  * Manually load the plugin being tested
  */
 function _manually_load_plugin() {
-    require dirname( dirname( __FILE__ ) ) . '/plugin-entry.php';
+	require dirname( __DIR__ ) . '/error-monitor.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 

@@ -4,10 +4,10 @@
 ./assets
 ./build
 ./classes
-./dashicons
-./parts
+./templates
 ./readme.md
 ./vendor/autoload.php
 ./vendor/composer
 ./vendor/phpmailer
-./plugin-entry.php
+./error-monitor.php
+./readme.txt

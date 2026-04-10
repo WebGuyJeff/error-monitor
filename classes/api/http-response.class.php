@@ -2,18 +2,15 @@
 namespace WebGuyJeff\Error_Monitor;
 
 /**
- * Error Monitor - Send JSON response.
- *
- * Sets the response header to the passed http status code and builds a response body containing an
- * array of the status code and data for client-side processing.
+ * HTTP responder.
  *
  * @package error-monitor
- * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2026, Jefferson Real
- * @license GPL3+
- * @link https://webguyjeff.com
  */
 
+
+/**
+ * Send HTTP JSON response.
+ */
 class HTTP_Response {
 
 

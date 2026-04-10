@@ -47,12 +47,13 @@ class Action_Controller {
 		$last_scan_time = isset( $settings['last_scan_time'] ) ? (int) $settings['last_scan_time'] : 0;
 		$last_log_time  = isset( $settings['last_log_timestamp'] ) ? (int) $settings['last_log_timestamp'] : 0;
 		$discovery      = new Log_File_Discovery();
+		$plugin_data    = get_plugin_data( ERRORMONITOR_PATH . 'error-monitor.php', false, true );
 
 		return $this->response(
 			200,
 			'Bootstrap loaded.',
 			array(
-				'pluginName'    => 'Error Monitor',
+				'pluginData'    => $plugin_data,
 				'settings'      => is_array( $settings ) ? $settings : array(),
 				'status'        => array(
 					'emailConfigured' => Settings::email_configured( $settings ),

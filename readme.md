@@ -27,8 +27,8 @@ It provides a lightweight admin interface for configuring scan behavior, SMTP de
 
 ## Requirements
 
-- WordPress
-- PHP 7.4+
+- WordPress 6.0+
+- PHP 8.0+
 - MySQL
 - Composer (dependency and tooling management)
 

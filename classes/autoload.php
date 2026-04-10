@@ -1,21 +1,21 @@
 <?php
 /**
- * Error Monitor - Class autoload by namesapce.
- *
- * - Sub-directories are searched recursively.
- * - Classes are denoted by the suffix .class.php.
+ * Class autoloader.
  *
  * @package error-monitor
- * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2026, Jefferson Real
- * @license GPL3+
- * @link https://webguyjeff.com
- *
+ */
+
+
+/**
+ * Autoload classes by namesapce
+ * 
+ * - Sub-directories are searched recursively.
+ * - Classes are denoted by the suffix .class.php.
+ * 
  * @param string $full_classname A fully-qualified class name e.g. 'Brand\\Project\\Class'.
  * @param string $namespace The namespace e.g. 'Brand\\Project\\'.
  * @param string $root Directory to recursively search.
  */
-
 spl_autoload_register(
 	function ( $full_classname ) use ( $namespace, $root ) {
 

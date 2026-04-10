@@ -2,15 +2,11 @@
 namespace WebGuyJeff\Error_Monitor;
 
 /**
- * Error Monitor - Inline Script.
+ * Inline Script.
  *
  * Generates inline script ready for inlining with client-side JavaScript.
  *
  * @package error-monitor
- * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2026, Jefferson Real
- * @license GPL3+
- * @link https://webguyjeff.com
  */
 class Setup_Inline_Script {
 

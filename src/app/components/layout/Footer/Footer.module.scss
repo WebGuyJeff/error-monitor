@@ -1,0 +1,28 @@
+.footer {
+	margin-top: var( --em_pageGap );
+	background: var( --em_color__bg );
+	padding: var( --em_sectionPadding );
+	font-size: 13px;
+}
+
+.inner {
+	gap: 1.5em;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.meta {
+	color: #666;
+}
+
+.right {
+	gap: 1em;
+	display: flex;
+	align-items: center;
+}
+
+.coffeeButton {
+	display: flex;
+}

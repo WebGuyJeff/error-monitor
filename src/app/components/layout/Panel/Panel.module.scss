@@ -1,0 +1,10 @@
+.panel {
+	background: var( --em_color__bg );
+	padding: var( --em_sectionPadding );
+}
+
+.gridColumns {
+	gap: var(--em_gap__md);
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}

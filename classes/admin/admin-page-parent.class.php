@@ -9,10 +9,6 @@ namespace WebGuyJeff\Error_Monitor;
  * This class should be used accross all WebGuyJeff plugins and themes.
  *
  * @package error-monitor
- * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2026, Jefferson Real
- * @license GPL3+
- * @link https://webguyjeff.com
  */
 
 class Admin_Page_Parent {

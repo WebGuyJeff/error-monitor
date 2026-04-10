@@ -1,0 +1,22 @@
+.buttonRow {
+	gap: 1em;
+	display: flex;
+	flex-flow: row wrap;
+	align-items: flex-start;
+	margin: 1em 0;
+}
+
+.conjoined {
+	gap: 0;
+
+	&>button:not(:last-child) {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	&>button:not(:first-child) {
+		border-left: none;
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+}

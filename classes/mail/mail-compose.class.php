@@ -2,25 +2,17 @@
 namespace WebGuyJeff\Error_Monitor;
 
 /**
- * Error Monitor - Compose email body.
- *
- * Compose HTML or plain text email body.
+ * Email body composer.
  *
  * @package error-monitor
- * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2026, Jefferson Real
- * @license GPL3+
- * @link https://webguyjeff.com
  */
 
-// WordPress Dependencies.
-use function get_bloginfo;
-use function wp_parse_url;
-use function esc_html;
-
+/**
+ * Compose HTML or plain text email body.
+ */
 class Mail_Compose {
 
-	const TEMPLATE_PATH = ERRORMONITOR_PATH . 'classes/mail/templates/';
+	const TEMPLATE_PATH = ERRORMONITOR_PATH . 'templates/';
 
 	private string $type;
 	private array $data;

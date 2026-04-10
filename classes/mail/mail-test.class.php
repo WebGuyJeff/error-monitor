@@ -2,16 +2,12 @@
 namespace WebGuyJeff\Error_Monitor;
 
 /**
- * Error Monitor - PHPMailer SMTP Account Test Handler.
+ * PHPMailer SMTP Account Test Handler.
  *
  * This uses the SMTP class alone to check that a connection can be made to an SMTP server,
  * authenticate, then disconnect
  *
  * @package error-monitor
- * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2026, Jefferson Real
- * @license GPL3+
- * @link https://webguyjeff.com
  */
 
 // Import PHPMailer classes into the global namespace
@@ -76,7 +72,7 @@ class Mail_Test {
 
 			default:
 				error_log( 'Error_Monitor: Mail_Test::run recieved an unknown test type.' );
-				return array( 400, 'Test failed:. The action requested was not possible.' );
+				return array( 400, 'Test failed: The action requested was not possible.' );
 		}
 	}
 
@@ -91,7 +87,7 @@ class Mail_Test {
 		$subject     = "[$site_name] SMTP Test Email";
 		$from_name   = $site_name;
 		$reply_name  = $from_name;
-		$reply_email = $settings['from_email'];
+		$reply_email = $this->settings['from_email'];
 		$site_domain = wp_parse_url( home_url(), PHP_URL_HOST );
 
 		$compose = new Mail_Compose( 'test' );
@@ -125,6 +121,8 @@ class Mail_Test {
 	 * @return array containing HTTP status code and a status message.
 	 */
 	private function smtp_connect() {
+		$smtp_connected = false;
+
 		$host     = $this->settings['host'];
 		$port     = $this->settings['port'];
 		$username = $this->settings['username'];
@@ -188,6 +186,7 @@ class Mail_Test {
 				$this->pretty_log[] = 'Connect - FAIL';
 				throw new Exception( 'Connect failed: ' . ( $smtp->getError()['error'] ?? 'Unknown error' ) );
 			} else {
+				$smtp_connected = true;
 				$this->pretty_log[] = 'Connect - PASS';
 			}
 
@@ -199,8 +198,15 @@ class Mail_Test {
 				$this->pretty_log[] = 'EHLO - PASS';
 			}
 
-			$services           = $smtp->getServerExtList();
-			$this->pretty_log[] = 'Server supports: ' . implode( ', ', array_keys( $services ) );
+			// Get server extensions.
+			$services = $smtp->getServerExtList();
+
+			if (is_array($services)) {
+				$this->pretty_log[] = 'Server supports: ' . implode(', ', array_keys($services));
+			} else {
+				$this->pretty_log[] = 'Server extensions unavailable';
+				$services = [];
+			}
 
 			/**
 			 * Try STARTTLS.
@@ -223,9 +229,8 @@ class Mail_Test {
 				} else {
 					$this->pretty_log[] = 'EHLO with STARTTLS - PASS';
 				}
-				$services = $smtp->getServerExtList();
 			} else {
-				$this->pretty_log[] = 'STARTTLS not offered by ' . $connect_host;
+				$this->pretty_log[] = 'STARTTLS not used (not supported or not required for this port)';
 			}
 
 			// Authenticate.
@@ -236,25 +241,26 @@ class Mail_Test {
 				$this->pretty_log[] = 'Authentication - PASS.';
 			}
 
-			$this->pretty_log[] = '🟢 All tests passed! SMTP configuration is valid.';
+			$this->pretty_log[] = '✅ All tests passed! SMTP configuration is valid.';
 			return array(
 				200,
 				__( 'SMTP connection successful.', 'error-monitor' ),
-				$this->pretty_log
+				[ implode( "\n", $this->pretty_log ) ]
 			);
 
 		} catch ( Exception $e ) {
-			$this->pretty_log[] = '🔴 SMTP test failed: ' . $e->getMessage();
-			return array( 500, array_merge( $this->pretty_log, $this->debug_log ) );
+			$this->pretty_log[] = '⚠️ SMTP test failed: ' . $e->getMessage();
 
 			return array(
 				500,
 				__( 'SMTP connection failed.', 'error-monitor' ),
-				array_merge( $this->pretty_log, $this->debug_log )
+				[ implode( "\n",  array_merge( $this->pretty_log, $this->debug_log ).join( "\n" ) ) ]
 			);
+		} finally {
+			// Whatever happened, close the connection.
+			if ( $smtp_connected ) {
+				$smtp->quit();
+			}
 		}
-
-		// Whatever happened, close the connection.
-		$smtp->quit();
 	}
 }

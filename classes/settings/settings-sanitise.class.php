@@ -7,10 +7,6 @@ namespace WebGuyJeff\Error_Monitor;
  * Used as a callback for register_setting().
  *
  * @package error-monitor
- * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2026, Jefferson Real
- * @license GPL3+
- * @link https://webguyjeff.com
  */
 
 

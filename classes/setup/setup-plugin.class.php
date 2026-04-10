@@ -2,15 +2,11 @@
 namespace WebGuyJeff\Error_Monitor;
 
 /**
- * Error Monitor - Setup_Plugin.
+ * Setup_Plugin.
  *
  * Setup styles and helper functions for this plugin.
  *
  * @package error-monitor
- * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2026, Jefferson Real
- * @license GPL3+
- * @link https://webguyjeff.com
  */
 class Setup_Plugin {
 
@@ -43,11 +39,11 @@ class Setup_Plugin {
 	public function admin_scripts_and_styles( $hook_suffix ) {
 
 		if ( str_contains( $hook_suffix, 'error-monitor' ) ) {
-			wp_register_style( 'error_monitor_admin_css', ERRORMONITOR_URL . 'build/admin/css/error-monitor-admin.css', array(), filemtime( ERRORMONITOR_PATH . 'build/admin/css/error-monitor-admin.css' ), 'all' );
-			wp_register_script( 'error_monitor_admin_js', ERRORMONITOR_URL . 'build/admin/js/error-monitor-admin.js', array(), filemtime( ERRORMONITOR_PATH . 'build/admin/js/error-monitor-admin.js' ), false );
+			wp_register_style( 'error_monitor_admin_css', ERRORMONITOR_URL . 'build/error-monitor.css', array(), filemtime( ERRORMONITOR_PATH . 'build/error-monitor.css' ), 'all' );
+			wp_register_script( 'error_monitor_admin_js', ERRORMONITOR_URL . 'build/error-monitor.js', array(), filemtime( ERRORMONITOR_PATH . 'build/error-monitor.js' ), false );
 			wp_add_inline_script( 'error_monitor_admin_js', Setup_Inline_Script::get_variables(), 'before' );
 			if ( ! wp_script_is( 'webguyjeff_icons', 'registered' ) ) {
-				wp_register_style( 'webguyjeff_icons', ERRORMONITOR_URL . 'dashicons/css/webguyjeff-icons.css', array(), filemtime( ERRORMONITOR_PATH . 'dashicons/css/webguyjeff-icons.css' ), 'all' );
+				wp_register_style( 'webguyjeff_icons', ERRORMONITOR_URL . 'assets/dashicons/css/webguyjeff-icons.css', array(), filemtime( ERRORMONITOR_PATH . 'assets/dashicons/css/webguyjeff-icons.css' ), 'all' );
 			}
 			if ( ! wp_script_is( 'webguyjeff_icons', 'enqueued' ) ) {
 				wp_enqueue_style( 'webguyjeff_icons' );

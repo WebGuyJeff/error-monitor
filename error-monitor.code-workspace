@@ -6,7 +6,10 @@
 	],
 	"settings": {
 		"editor.formatOnSave": false,
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"[scss]": {
+			"editor.defaultFormatter": "vscode.css-language-features"
+		}
 	},
 	"launch": {
 		"version": "0.2.0",

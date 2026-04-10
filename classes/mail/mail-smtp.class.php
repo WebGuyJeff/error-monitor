@@ -2,15 +2,11 @@
 namespace WebGuyJeff\Error_Monitor;
 
 /**
- * Error Monitor - PHPMailer SMTP Mail Handler.
+ * PHPMailer SMTP Mail Handler.
  *
  * Send an email via PHPMailer using the SMTP account configured by the user.
  *
  * @package error-monitor
- * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2026, Jefferson Real
- * @license GPL3+
- * @link https://webguyjeff.com
  */
 
 // Import PHPMailer classes into the global namespace.

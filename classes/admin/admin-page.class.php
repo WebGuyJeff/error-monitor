@@ -7,10 +7,7 @@ namespace WebGuyJeff\Error_Monitor;
  * Hook into the WP admin area and add menu options and settings pages.
  *
  * @package error-monitor
- * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2024, Jefferson Real
- * @license GPL3+
- * @link https://webguyjeff.com
+ * @copyright Copyright (c) 2024, Web Guy Jeff
  */
 class Admin_Page {
 
@@ -119,7 +116,7 @@ class Admin_Page {
 		wp_enqueue_style( 'error_monitor_admin_css' );
 
 		?>
-		<div id="errorMonitorReactRoot" class="wrap adminPage"></div>
+		<div id="errorMonitor"></div>
 		<?php
 	}
 }
