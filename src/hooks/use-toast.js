@@ -16,7 +16,7 @@ const useToast = () => {
 			setToasts( ( current ) =>
 				current.filter( ( toast ) => toast.id !== id )
 			)
-		}, 9999999 ) // 4000
+		}, 4000 )
 	}, [] )
 
 	const removeToast = useCallback( ( id ) => {

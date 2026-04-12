@@ -71,18 +71,18 @@
 	--em_gap__lg: 2em;
 	--em_gap__xl: 4em;
 
-	--em_pagePadding: 0 var(--em_gap__sm);
 	--em_pageGap: var(--em_gap__md);
-	--em_sectionPadding: var(--em_gap__md);
+	--em_pagePaddingX: var(--em_gap__md);
+	--em_sectionPaddingY: var(--em_gap__md);
 
 	@media screen and (min-width: 480px) {
-		--em_sectionPadding: var(--em_gap__lg);
+		--em_pagePaddingX: 0 var(--em_gap__lg);
+		--em_sectionPaddingY: var(--em_gap__lg);
 	}
 
 	@media screen and (min-width: 782.001px) {
-		--em_pagePadding: 0 var(--em_gap__md);
+		--em_pagePaddingX: var(--em_gap__xl);
 		--em_pageGap: var(--em_gap__lg);
-		--em_sectionPadding: var(--em_gap__lg) var(--em_gap__xl);
 	}
 
 	--em_wpadminbarHeight_jsControlled: 32px;

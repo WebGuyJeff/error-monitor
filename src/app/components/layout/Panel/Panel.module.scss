@@ -1,6 +1,8 @@
 .panel {
-	background: var( --em_color__bg );
-	padding: var( --em_sectionPadding );
+	border-top: var(--em_containerBorder);
+	background: none;
+	padding-block: var(--em_sectionPaddingY);
+	padding-inline: var(--em_pagePaddingX);
 }
 
 .gridColumns {

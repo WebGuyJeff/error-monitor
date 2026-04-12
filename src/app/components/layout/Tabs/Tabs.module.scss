@@ -1,7 +1,8 @@
 .tabs {
 	gap: 0.5em;
 	display: flex;
-	padding: 0 1em;
+	padding-block: var(--em_gap__md) 0;
+	padding-inline: var(--em_pagePaddingX);
 }
 
 .tab {

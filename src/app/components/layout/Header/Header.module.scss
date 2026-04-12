@@ -1,7 +1,8 @@
 .header {
 	margin-bottom: var(--em_pageGap);
 	background: var(--em_color__bg);
-	padding: var(--em_sectionPadding);
+	padding-block: var(--em_sectionPaddingY);
+	padding-inline: var(--em_pagePaddingX);
 	padding-bottom: var(--em_gap__md);
 	border-bottom: solid 0.25em;
 	border-image: linear-gradient(to right, var(--em_color__primary) 50%, var(--em_color__neutral3)) 1;
