@@ -95,10 +95,6 @@ class Settings {
 			$updated         = true;
 		}
 
-		$yesNO = $updated ? 'Yes' : 'No';
-		$validYesNo = self::validate( array( $key => $value ) ) ? 'Yes' : 'No';
-		error_log( 'Settings::set | updated: ' . $yesNO . ' / valid: ' . $validYesNo . ' | ' . $key . ' = ' . print_r( $value, true ) );
-
 		if ( ! $updated ) {
 			return false;
 		}
