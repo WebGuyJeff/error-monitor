@@ -38,11 +38,28 @@ const buildCssModuleClass = ( context, __, localName ) => {
 }
 
 /*
- * Modify existing WordPress scripts CSS loader rule instead of replacing it.
- * This rule overrides default css module hashed classes to human readable classes.
+ * Patch every rule whose use-chain includes css-loader (plain .css, .pcss, and .scss).
+ * Matching only `rule.test` strings that contain "css" misses `/\.(sc|sa)ss$/`, so
+ * .module.scss never received getLocalIdent and kept hashed class names.
  */
+const ruleUsesCssLoader = ( rule ) =>
+	Array.isArray( rule.use ) &&
+	rule.use.some(
+		( loader ) =>
+			typeof loader === 'object' &&
+			loader.loader &&
+			/[\\/]css-loader[\\/]/.test( loader.loader )
+	)
+
 const enhanceWpScriptsCssLoader = ( rule ) => {
-	if ( !rule.test || !rule.test.toString().includes( 'css' ) ) {
+	if ( Array.isArray( rule.oneOf ) ) {
+		return { ...rule, oneOf: rule.oneOf.map( enhanceWpScriptsCssLoader ) }
+	}
+	if ( Array.isArray( rule.rules ) ) {
+		return { ...rule, rules: rule.rules.map( enhanceWpScriptsCssLoader ) }
+	}
+
+	if ( ! ruleUsesCssLoader( rule ) ) {
 		return rule
 	}
 
@@ -50,18 +67,20 @@ const enhanceWpScriptsCssLoader = ( rule ) => {
 		...rule,
 		use: rule.use.map( ( loader ) => {
 			const isCssLoader =
-        typeof loader === 'object' &&
-        loader.loader &&
-        /[\\/]css-loader[\\/]/.test( loader.loader )
+				typeof loader === 'object' &&
+				loader.loader &&
+				/[\\/]css-loader[\\/]/.test( loader.loader )
 
-			if ( !isCssLoader ) return loader
+			if ( ! isCssLoader ) {
+				return loader
+			}
 
 			return {
 				...loader,
 				options: {
 					...loader.options,
 					modules: {
-						auto: /\.module\.css$/,
+						auto: /\.module\.(css|scss|sass|pcss)$/i,
 						getLocalIdent: buildCssModuleClass,
 					},
 				},

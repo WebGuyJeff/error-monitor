@@ -88,36 +88,33 @@ const EmailTab = ( {
 
 				<p>Save your settings before testing connection and sending a test email.</p>
 
-				<div className="errorMonitor__testWrapper">
+				<ButtonRow>
+					<Button
+						label={ loadingAction === 'test_smtp' ? 'Testing Connection...' : 'Test Connection' }
+						variant="secondary"
+						disabled={ !enableTests || loadingAction === 'test_smtp' }
+						onClick={ () => runTest( 'smtp' ) }
+					/>
+					<Button
+						label={ loadingAction === 'test_email' ? 'Sending Test Email...' : 'Send Test Email' }
+						variant="secondary"
+						disabled={ !enableTests || loadingAction === 'test_email' }
+						onClick={ () => runTest( 'email' ) }
+					/>
+				</ButtonRow>
 
-					<ButtonRow>
-						<Button
-							label={ loadingAction === 'test_smtp' ? 'Testing Connection...' : 'Test Connection' }
-							variant="secondary"
-							disabled={ !enableTests || loadingAction === 'test_smtp' }
-							onClick={ () => runTest( 'smtp' ) }
-						/>
-						<Button
-							label={ loadingAction === 'test_email' ? 'Sending Test Email...' : 'Send Test Email' }
-							variant="secondary"
-							disabled={ !enableTests || loadingAction === 'test_email' }
-							onClick={ () => runTest( 'email' ) }
-						/>
-					</ButtonRow>
-
-					{ smtpOutput?.status &&
-						<div
-							className="errorMonitor__logOutput"
-							style={ { display: 'block' } }
+				{ smtpOutput?.status &&
+					<div
+						className="errorMonitor__logOutput"
+						style={ { display: 'block' } }
+					>
+						<pre
+							className={ `errorMonitor__alert${smtpOutput.status ? ` errorMonitor__alert-${smtpOutput.status}` : ''}` }
 						>
-							<pre
-								className={ `errorMonitor__alert${smtpOutput.status ? ` errorMonitor__alert-${smtpOutput.status}` : ''}` }
-							>
-								{ smtpOutput.messages.join( '\n' ) }
-							</pre>
-						</div>
-					}
-				</div>
+							{ smtpOutput.messages.join( '\n' ) }
+						</pre>
+					</div>
+				}
 
 			</Card>
 		</Panel>
