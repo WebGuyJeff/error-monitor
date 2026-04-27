@@ -104,12 +104,9 @@ const EmailTab = ( {
 				</ButtonRow>
 
 				{ smtpOutput?.status &&
-					<div
-						className="errorMonitor__logOutput"
-						style={ { display: 'block' } }
-					>
+					<div className="errorMonitor__logOutput">
 						<pre
-							className={ `errorMonitor__alert${smtpOutput.status ? ` errorMonitor__alert-${smtpOutput.status}` : ''}` }
+							className={ `em_smtpLog${smtpOutput.status ? ` em_smtpLog__${smtpOutput.status}` : ''}` }
 						>
 							{ smtpOutput.messages.join( '\n' ) }
 						</pre>
